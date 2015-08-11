@@ -1,7 +1,10 @@
 #include "JobSystem.h"
+#include "Window.h"
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+
+
 
 void printI(void* i)
 {
@@ -51,6 +54,7 @@ int main()
 	
 	freopen("test.txt", "w", stdout);
 
+	WindowHandle window = createWindow(800, 600);
 
 	initJobSystem();
 

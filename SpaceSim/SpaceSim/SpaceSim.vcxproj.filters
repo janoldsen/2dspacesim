@@ -21,9 +21,21 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics_WIN32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window_WIN32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JobSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
