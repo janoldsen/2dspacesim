@@ -21,27 +21,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <ClCompile Include="..\src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics_WIN32.c">
+    <ClCompile Include="..\src\Graphics_WIN32.c">
       <Filter>Source Files\WIN32</Filter>
     </ClCompile>
-    <ClCompile Include="JobSystem_WIN32.c">
+    <ClCompile Include="..\src\JobSystem_WIN32.c">
       <Filter>Source Files\WIN32</Filter>
     </ClCompile>
-    <ClCompile Include="Window_WIN32.c">
+    <ClCompile Include="..\src\Window_WIN32.c">
       <Filter>Source Files\WIN32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JobSystem.h">
+    <ClInclude Include="..\src\Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h">
+    <ClInclude Include="..\src\JobSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics.h">
+    <ClInclude Include="..\src\Graphics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
