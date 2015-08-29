@@ -13,29 +13,35 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\WIN32">
+      <UniqueIdentifier>{ac258845-e477-48d7-975f-037dc94636fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GL">
+      <UniqueIdentifier>{99115375-ffb0-4d39-adc7-3fa8e24083ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="JobSystem_WIN32.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphics_WIN32.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\WIN32</Filter>
+    </ClCompile>
+    <ClCompile Include="JobSystem_WIN32.c">
+      <Filter>Source Files\WIN32</Filter>
     </ClCompile>
     <ClCompile Include="Window_WIN32.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\WIN32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JobSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics.h">
+    <ClInclude Include="Window.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h">
+    <ClInclude Include="Graphics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,7 @@
 #ifdef _WIN32
 #include "Window.h"
 #include <Windows.h>
+#include <stdio.h>
 
 
 LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -21,27 +22,20 @@ WindowHandle createWindow(int width, int height)
 
 	HINSTANCE currentInstance = GetModuleHandleA(NULL);
 
-	WNDCLASSA wndClass = 
-	{
-		CS_HREDRAW | CS_VREDRAW, // style,
-		wndProc,
-		0, //extra bytes
-		0, //extra bytes instance
-		currentInstance,
-		NULL, //icon
-		NULL, //cursor
-		NULL, //background
-		NULL, //menu name
-		"main" //class name
-	};
-	
-	RegisterClassA(&wndClass);
+	WNDCLASSEX wndClass;
+	memset(&wndClass, 0, sizeof(wndClass));
+	wndClass.cbSize = sizeof(wndClass);
+	wndClass.style = CS_OWNDC;
+	wndClass.lpfnWndProc = wndProc;
+	wndClass.hInstance = currentInstance;
+	wndClass.lpszClassName = L"main";
+		
+	RegisterClassEx(&wndClass);
 
-	
-	
-	HWND window = CreateWindowA(
-		"main",
-		"SpaceSim",
+	HWND window = CreateWindowEx(
+		WS_EX_APPWINDOW | WS_EX_WINDOWEDGE,
+		L"main",
+		L"SpaceSim",
 		WS_CAPTION | WS_SYSMENU, //style
 		CW_USEDEFAULT, //posX
 		CW_USEDEFAULT, //posY
@@ -51,7 +45,7 @@ WindowHandle createWindow(int width, int height)
 		NULL, //menu,
 		currentInstance,
 		NULL);
-
+	
 	ShowWindow(window, SW_SHOWDEFAULT);
 
 	return (WindowHandle)window;
@@ -59,5 +53,14 @@ WindowHandle createWindow(int width, int height)
 
 
 
-
+void updateWindow(WindowHandle handle)
+{
+	MSG msg;
+	while (PeekMessage(&msg, handle, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+	
+}
 #endif

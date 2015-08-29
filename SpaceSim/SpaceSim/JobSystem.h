@@ -5,11 +5,11 @@
 #define NUM_FIBERS 160
 
 
-struct JobDecl
+typedef struct JobDecl
 {
 	void(*fpFunction)(void* pParams);
 	void* pParams;
-} typedef JobDecl;
+} JobDecl;
 
 
 typedef struct Counter Counter;

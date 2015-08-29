@@ -4,9 +4,9 @@
 
 typedef void* WindowHandle;
 
-
 WindowHandle createWindow(int width, int height);
 
+void updateWindow(WindowHandle handle);
 
 
 
