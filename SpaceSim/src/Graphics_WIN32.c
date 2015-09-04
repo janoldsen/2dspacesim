@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <gl\GL.h>
 #include <stdio.h>
+#include <assert.h>
+#include <math.h>
 #include "GL\glext.h"
 //#include "GL\glxext.h"
 #include "GL\wglext.h"
@@ -10,7 +12,47 @@
 
 PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
 PFNGLDEBUGMESSAGECALLBACKPROC glDebugMessageCallback;
+PFNGLDEBUGMESSAGECONTROLPROC glDebugMessageControl;
 PFNGLCLEARBUFFERFVPROC glClearBufferfv;
+PFNGLCREATESHADERPROC glCreateShader;
+PFNGLSHADERSOURCEPROC glShaderSource;
+PFNGLCOMPILESHADERPROC glCompileShader;
+PFNGLCREATEPROGRAMPROC glCreateProgram;
+PFNGLATTACHSHADERPROC glAttachShader;
+PFNGLLINKPROGRAMPROC glLinkProgram;
+PFNGLDELETESHADERPROC glDeleteShader;
+PFNGLUSEPROGRAMPROC glUseProgram;
+PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
+PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
+PFNGLGETSHADERIVPROC glGetShaderiv;
+PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
+PFNGLUNIFORM2FPROC glUniform2f;
+PFNGLUNIFORM2UIVPROC glUniform2uiv;
+
+static GLuint g_program;
+
+static loadExtensions()
+{
+
+	wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+	glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)wglGetProcAddress("glDebugMessageCallback");
+	glDebugMessageControl = (PFNGLDEBUGMESSAGECONTROLPROC)wglGetProcAddress("glDebugMessageControl");
+	glClearBufferfv = (PFNGLCLEARBUFFERFVPROC)wglGetProcAddress("glClearBufferfv");
+	glCreateShader = (PFNGLCREATESHADERPROC)wglGetProcAddress("glCreateShader");
+	glShaderSource = (PFNGLSHADERSOURCEPROC)wglGetProcAddress("glShaderSource");
+	glCompileShader = (PFNGLCOMPILESHADERPROC)wglGetProcAddress("glCompileShader");
+	glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
+	glAttachShader = (PFNGLATTACHSHADERPROC)wglGetProcAddress("glAttachShader");
+	glLinkProgram = (PFNGLLINKPROGRAMPROC)wglGetProcAddress("glLinkProgram");
+	glDeleteShader = (PFNGLDELETESHADERPROC)wglGetProcAddress("glDeleteShader");
+	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
+	glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
+	glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
+	glGetShaderiv = (PFNGLGETSHADERIVPROC)wglGetProcAddress("glGetShaderiv");
+	glGetShaderInfoLog =  (PFNGLGETSHADERINFOLOGPROC)wglGetProcAddress("glGetShaderInfoLog");
+	glUniform2f = (PFNGLUNIFORM2FPROC)wglGetProcAddress("glUniform2f");
+	glUniform2uiv = (PFNGLUNIFORM2UIVPROC)wglGetProcAddress("glUniform2uiv");
+}
 
 static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint id, GLenum _severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -57,6 +99,64 @@ static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint i
 	printf("GLDEBUG(%s) %s error: %s (%s)\n", severity, source, message, type);
 }
 
+static GLuint compileShader(GLenum type, char* src)
+{
+	GLuint shader = glCreateShader(type);
+	glShaderSource(shader, 1, &src, NULL);
+	glCompileShader(shader);
+
+	int isCompiled;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+	if (!isCompiled)
+	{
+		char error[512];
+
+		glGetShaderInfoLog(shader, 512, NULL, error);
+
+		printf("Shader Error: %s", error);
+		glDeleteShader(shader); 
+
+		assert("shaderCompilationFailed" && 0);
+		
+	}
+
+	return shader;
+}
+
+
+static void packDestruction(int* unpacked, unsigned int* packed)
+{
+	for (int j = 0; j < 8; ++j)
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			int idx = j / 4;
+			int bit = (j - idx * 4) * 8 + i;
+			packed[idx] |= unpacked[i + 8 * j] << bit;
+		}
+	}
+}
+
+static void packColors(int* unpacked, unsigned int* packed)
+{
+	for (int j = 0; j < 8; ++j)
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			int shift = (j * 8 + i) * 3;
+			int idx = shift / 32;
+			if (shift + 3 > 32)
+			{
+				packed[idx] |= unpacked[j * 8 + i] << (shift % 32);
+				packed[idx+1] |= unpacked[j*8 +i] << 
+			}
+			else
+			{
+				packed[idx] |= unpacked[i + 8 * j] << (shift%32);
+			}
+		}
+	}
+}
 
 void initGraphics(int width, int height, WindowHandle window)
 {
@@ -88,17 +188,9 @@ void initGraphics(int width, int height, WindowHandle window)
 
 
 	//load extensions
-	PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB;
-	wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)
-		wglGetProcAddress("wglGetExtensionsStringARB");
-	const char * extension_string = wglGetExtensionsStringARB(dc);
 
-	wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)
-		wglGetProcAddress("wglCreateContextAttribsARB");
-	glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)
-		wglGetProcAddress("glDebugMessageCallback");
-	glClearBufferfv = (PFNGLCLEARBUFFERFVPROC)
-		wglGetProcAddress("glClearBufferfv");
+	loadExtensions();
+
 
 	// make real one
 	{
@@ -125,18 +217,81 @@ void initGraphics(int width, int height, WindowHandle window)
 	//add debug functionality
 #ifdef _DEBUG
 	glDebugMessageCallback(debugMessageCallback, NULL);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
 #endif
 
 
 	glViewport(0, 0, width, height);
+
+	char buffer[1024] = { 0 };
+	FILE* file = fopen("data/shader/test.vs", "r");
+	fread(buffer, sizeof(char), 1024, file);
+
+	const GLchar* source = buffer;
+	GLuint vs = compileShader(GL_VERTEX_SHADER, buffer);
+	fclose(file);
+
+	file = fopen("data/shader/test.fs", "r");
+	memset(buffer, 0, sizeof(buffer));
+	fread(buffer, sizeof(char), 1024, file);
+
+	GLuint fs = compileShader(GL_FRAGMENT_SHADER, buffer);
+	fclose(file);
+	
+	
+
+
+	g_program = glCreateProgram();
+	glAttachShader(g_program, vs);
+	glAttachShader(g_program, fs);
+	glLinkProgram(g_program);
+
+	glDeleteShader(vs);
+	glDeleteShader(fs);
+
+
+	GLuint vertexArrayObject;
+	glGenVertexArrays(1, &vertexArrayObject);
+	glBindVertexArray(vertexArrayObject);
+
+
+	int destruction[] = {
+		1,1,1,1,1,1,1,0,
+		1,1,1,1,1,1,1,0,
+		1,1,1,1,1,0,0,0,
+		1,1,1,1,1,1,1,0,
+		0,0,1,1,1,0,0,0,
+		0,0,0,1,1,1,0,0,
+		0,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1
+	};
+
+	unsigned int _destruction[2] = { 0,0 };
+
+	packDestruction(destruction, _destruction);
+
+	glUseProgram(g_program);
+	glUniform2uiv(5, 1, _destruction);
+	glUniform2f(0, 800.0f, 600.0f);
+
+
 }
 
 void render()
 {
-	float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	float color[] = { 0.3f, 0.3f, 0.3f, 1.0f };
 	float one = 1.0f;
 	glClearBufferfv(GL_COLOR, 0, color);
 	glClearBufferfv(GL_DEPTH, 0, &one);
+
+
+
+	glUseProgram(g_program);
+
+	
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
 }
 
 

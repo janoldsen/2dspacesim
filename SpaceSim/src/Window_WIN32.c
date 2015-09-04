@@ -32,6 +32,9 @@ WindowHandle createWindow(int width, int height)
 		
 	RegisterClassEx(&wndClass);
 
+	RECT rect = { 0, 0, width, height };
+	AdjustWindowRectEx(&rect, WS_CAPTION | WS_SYSMENU, 0, WS_EX_APPWINDOW | WS_EX_WINDOWEDGE);
+
 	HWND window = CreateWindowEx(
 		WS_EX_APPWINDOW | WS_EX_WINDOWEDGE,
 		L"main",
@@ -39,8 +42,8 @@ WindowHandle createWindow(int width, int height)
 		WS_CAPTION | WS_SYSMENU, //style
 		CW_USEDEFAULT, //posX
 		CW_USEDEFAULT, //posY
-		width,
-		height,
+		rect.right - rect.left,
+		rect.bottom - rect.top,
 		NULL, //parent
 		NULL, //menu,
 		currentInstance,
