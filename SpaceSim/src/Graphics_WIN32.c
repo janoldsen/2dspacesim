@@ -154,56 +154,173 @@ static void unPackColors(unsigned int* packed, int* unpacked)
 
 void setUpShips()
 {
-	int destruction[] = {
-		1,1,1,1,1,1,1,0,
-		1,1,1,1,1,1,1,0,
-		1,1,1,1,1,0,0,0,
-		1,1,1,1,1,1,1,0,
-		0,0,1,1,1,0,0,0,
-		0,0,0,1,1,1,0,0,
-		0,1,1,1,1,1,1,1,
+	int destruction[2][64] = {
+		{
+		1,1,1,1,1,1,1,1,
+		1,0,1,1,1,1,0,1,
+		1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,
+		1,0,1,1,1,1,0,1,
 		1,1,1,1,1,1,1,1
+		},
+		{
+		1,1,1,1,1,1,1,0,
+		1,1,1,1,1,1,0,1,
+		1,1,1,1,1,0,1,1,
+		1,1,1,1,0,1,1,1,
+		1,1,1,0,1,1,1,1,
+		1,1,0,1,1,1,1,1,
+		1,0,1,1,1,1,1,1,
+		0,1,1,1,1,1,1,1
+		},
 	};
 
-	unsigned int _destruction[2] = { 0,0 };
+	unsigned int _destruction[2][2] = { 0,0 };
 
-	packDestruction(destruction, _destruction);
+	for (int i = 0; i < 2;++i)
+		packDestruction(destruction[i], _destruction[i]);
 
 
-	int colors[] = {
+	int colors[9][64] = {
+		{
+		0,0,0,0,0,0,0,0,
+		0,1,1,1,1,1,1,1,
+		0,1,2,2,2,2,2,2,
+		0,1,2,3,3,3,3,3,
+		0,1,2,3,4,4,4,4,
+		0,1,2,3,4,5,5,5,
+		0,1,2,3,4,5,6,6,
+		0,1,2,3,4,5,6,7
+		},
+		{
 		0,1,2,3,4,5,6,7,
-		0,0,1,1,2,2,3,3,
-		4,4,5,5,6,6,7,7,
-		0,0,0,1,1,1,2,2,
-		2,3,3,3,4,4,4,5,
-		5,5,6,6,6,7,7,7,
-		0,7,1,6,2,5,3,4,
+		0,1,2,3,4,5,6,6,
+		0,1,2,3,4,5,5,5,
+		0,1,2,3,4,4,4,4,
+		0,1,2,3,3,3,3,3,
+		0,1,2,2,2,2,2,2,
+		0,1,1,1,1,1,1,1,
+		0,0,0,0,0,0,0,0
+		},
+		{
+		7,6,5,4,3,2,1,0,
+		6,6,5,4,3,2,1,0,
+		5,5,5,4,3,2,1,0,
+		4,4,4,4,3,2,1,0,
+		3,3,3,3,3,2,1,0,
+		2,2,2,2,2,2,1,0,
+		1,1,1,1,1,1,1,0,
+		0,0,0,0,0,0,0,0
+		},
+		{
+		0,0,0,0,0,0,0,0,
+		1,1,1,1,1,1,1,0,
+		2,2,2,2,2,2,1,0,
+		3,3,3,3,3,2,1,0,
+		4,4,4,4,3,2,1,0,
+		5,5,5,4,3,2,1,0,
+		6,6,5,4,3,2,1,0,
 		7,6,5,4,3,2,1,0
+		},
+		{
+		0,1,2,3,4,5,6,7,
+		0,1,2,3,4,5,6,7,
+		0,1,2,3,4,5,6,7,
+		0,1,2,3,4,5,6,7,
+		0,1,2,3,4,5,6,7,
+		0,1,2,3,4,5,6,7,
+		0,1,2,3,4,5,6,7,
+		0,1,2,3,4,5,6,7
+		},
+		{
+		7,6,5,4,3,2,1,0,
+		7,6,5,4,3,2,1,0,
+		7,6,5,4,3,2,1,0,
+		7,6,5,4,3,2,1,0,
+		7,6,5,4,3,2,1,0,
+		7,6,5,4,3,2,1,0,
+		7,6,5,4,3,2,1,0,
+		7,6,5,4,3,2,1,0,
+		},
+		{
+		0,0,0,0,0,0,0,0,
+		1,1,1,1,1,1,1,1,
+		2,2,2,2,2,2,2,2,
+		3,3,3,3,3,3,3,3,
+		4,4,4,4,4,4,4,4,
+		5,5,5,5,5,5,5,5,
+		6,6,6,6,6,6,6,6,
+		7,7,7,7,7,7,7,7
+		},
+		{
+		7,7,7,7,7,7,7,7,
+		6,6,6,6,6,6,6,6,
+		5,5,5,5,5,5,5,5,
+		4,4,4,4,4,4,4,4,
+		3,3,3,3,3,3,3,3,
+		2,2,2,2,2,2,2,2,
+		1,1,1,1,1,1,1,1,
+		0,0,0,0,0,0,0,0
+		},
+		{
+		0,1,2,3,4,5,6,7,
+		7,0,1,2,3,4,5,6,
+		6,7,0,1,2,3,4,5,
+		5,6,7,0,1,2,3,4,
+		4,5,6,7,0,1,2,3,
+		3,4,5,6,7,0,1,2,
+		2,3,4,5,6,7,0,1,
+		1,2,3,4,5,6,7,0
+		},
 	};
 
-	unsigned int _colors[6] = { 0 };
+	unsigned int _colors[9][6] = { 0 };
 
-	packColors(colors, _colors);
-
-	float colorPalette[8][4] =
+	for (int i = 0; i < 9; ++i)
 	{
-		{ 1.0f, 1.0f, 1.0f },
-		{ 0.0f, 0.0f, 0.0f },
-		{ 1.0f, 0.0f, 0.0f },
-		{ 0.0f, 1.0f, 0.0f },
-		{ 0.0f, 0.0f, 1.0f },
-		{ 1.0f, 1.0f, 0.0f },
-		{ 0.0f, 1.0f, 1.0f },
-		{ 1.0f, 0.0f, 1.0f }
+		packColors(colors[i], _colors[i]);
+	}
+
+	float colorPalette[2][8][4] =
+	{
+	{
+		{ 0.8f, 0.8f, 0.8f },
+		{ 0.7f, 0.7f, 0.7f },
+		{ 0.6f, 0.6f, 0.6f },
+		{ 0.5f, 0.5f, 0.5f },
+		{ 0.4f, 0.4f, 0.4f },
+		{ 0.3f, 0.3f, 0.3f },
+		{ 0.2f, 0.2f, 0.2f },
+		{ 0.1f, 0.1f, 0.1f }
+	},
+	{
+		{ 0.0f, 0.0f, 0.8f },
+		{ 0.0f, 0.0f, 0.7f },
+		{ 0.0f, 0.0f, 0.6f },
+		{ 0.0f, 0.0f, 0.5f },
+		{ 0.0f, 0.0f, 0.4f },
+		{ 0.0f, 0.0f, 0.3f },
+		{ 0.0f, 0.0f, 0.2f },
+		{ 0.0f, 0.0f, 0.1f }
+	}
 	};
 
 
 	float angle = 0.3f;
-	float transform[12] =
+	float transform[2][12] =
 	{
-		cosf(angle), -sinf(angle), 0, 0,
-		sinf(angle), cosf(angle), 0, 0,
-		0, 0, 1, 0
+	{
+		1, 0, -200, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+	},
+	{
+		1, 0, 200, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+	}
 	};
 
 
@@ -213,19 +330,44 @@ void setUpShips()
 		int pos[2];
 		int shipIdx;
 		int colorIdx;
-	} staticData[16] = { 0 };
+	} staticData[2][16] = { 0 };
+	int destructionIdx[2][16] = { 0 };
 	
-	for (int j = 0; j < 4; ++j)
+	for (int k = 0; k < 2; ++k)
 	{
-		for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
 		{
-			staticData[j * 4 + i].pos[0] = i - 1;
-			staticData[j * 4 + i].pos[1] = j - 1;
+			for (int i = 0; i < 4; ++i)
+			{
+				int color = 8;
+				if (i == 0 && j == 3)
+					color = 0;
+				else if (i == 0 && j == 0)
+					color = 1;
+				else if (i == 3 && j == 0)
+					color = 2;
+				else if (i == 3 && j == 3)
+					color = 3;
+				else if (i == 0)
+					color = 4;
+				else if (i == 3)
+					color = 5;
+				else if (j == 3)
+					color = 6;
+				else if (j == 0)
+					color = 7;
+				else
+					destructionIdx[k][j * 4 + i] = 1;
+
+				staticData[k][j * 4 + i].pos[0] = i - 1;
+				staticData[k][j * 4 + i].pos[1] = j - 1;
+				staticData[k][j * 4 + i].shipIdx = k;
+				staticData[k][j * 4 + i].colorIdx = color;
+			}
 		}
 	}
 
 
-	int destructionIdx[16] = { 0 };
 
 	GLuint buffers[2];
 	glGenBuffers(2, buffers);
@@ -271,7 +413,7 @@ void setUpShips()
 		GLuint destructionBuffer;
 		glGenBuffers(1, &destructionBuffer);
 		glBindBuffer(GL_TEXTURE_BUFFER, destructionBuffer);
-		glBufferData(GL_TEXTURE_BUFFER, sizeof(int) * 2, &_destruction, GL_STATIC_DRAW);
+		glBufferData(GL_TEXTURE_BUFFER, sizeof(_destruction), &_destruction, GL_STATIC_DRAW);
 
 		GLuint destructionTexture;
 		glGenTextures(1, &destructionTexture);
@@ -285,7 +427,7 @@ void setUpShips()
 		GLuint colorBuffer;
 		glGenBuffers(1, &colorBuffer);
 		glBindBuffer(GL_TEXTURE_BUFFER, colorBuffer);
-		glBufferData(GL_TEXTURE_BUFFER, sizeof(int) * 6, &_colors, GL_STATIC_DRAW);
+		glBufferData(GL_TEXTURE_BUFFER, sizeof(_colors), &_colors, GL_STATIC_DRAW);
 
 		GLuint colorTexture;
 		glGenTextures(1, &colorTexture);
@@ -451,27 +593,33 @@ void initGraphics(int width, int height, WindowHandle window)
 
 void render()
 {
-	float color[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+	float color[] = { 0.3f, 0.0f, 0.0f, 1.0f };
 	float one = 1.0f;
 	glClearBufferfv(GL_COLOR, 0, color);
 	glClearBufferfv(GL_DEPTH, 0, &one);
 
 	static float angle = 0.0f;
 
-	angle += 0.001f;
+	angle += 0.01f;
 	glBindBuffer(GL_UNIFORM_BUFFER, g_transformBuffer);
 	float* transform = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
 	transform[0] = cosf(angle);
 	transform[1] = -sinf(angle);
 	transform[4] = sinf(angle);
 	transform[5] = cosf(angle);
+
+	transform[12] = cosf(-angle);
+	transform[13] = -sinf(-angle);
+	transform[16] = sinf(-angle);
+	transform[17] = cosf(-angle);
+
 	
 	glUnmapBuffer(GL_UNIFORM_BUFFER);
 	//glBindBufferBase(GL_UNIFORM_BUFFER, TRANSFORM_UNI_BINDING, g_transformBuffer);
 
 	//glUseProgram(g_program);
 
-	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 16);
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 32);
 
 }
 
