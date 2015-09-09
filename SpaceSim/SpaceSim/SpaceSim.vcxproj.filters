@@ -19,6 +19,9 @@
     <Filter Include="Source Files\GL">
       <UniqueIdentifier>{99115375-ffb0-4d39-adc7-3fa8e24083ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shader">
+      <UniqueIdentifier>{a972576a-5def-4208-9afc-e6c165fb9f90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.c">
@@ -33,6 +36,9 @@
     <ClCompile Include="..\src\Window_WIN32.c">
       <Filter>Source Files\WIN32</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Graphics_Extension_WIN32.c">
+      <Filter>Source Files\WIN32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Window.h">
@@ -44,5 +50,16 @@
     <ClInclude Include="..\src\Graphics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\bin\data\shader\ShaderDefinitions.h">
+      <Filter>Resource Files\shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\data\shader\test.fs">
+      <Filter>Resource Files\shader</Filter>
+    </None>
+    <None Include="..\bin\data\shader\test.vs">
+      <Filter>Resource Files\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

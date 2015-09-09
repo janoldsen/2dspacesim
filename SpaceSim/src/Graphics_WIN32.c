@@ -5,54 +5,17 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
-#include "GL\glext.h"
-//#include "GL\glxext.h"
-#include "GL\wglext.h"
+#include "../bin/data/shader/ShaderDefinitions.h"
 
+#include "Graphics_Extension_WIN32.c"
 
-PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
-PFNGLDEBUGMESSAGECALLBACKPROC glDebugMessageCallback;
-PFNGLDEBUGMESSAGECONTROLPROC glDebugMessageControl;
-PFNGLCLEARBUFFERFVPROC glClearBufferfv;
-PFNGLCREATESHADERPROC glCreateShader;
-PFNGLSHADERSOURCEPROC glShaderSource;
-PFNGLCOMPILESHADERPROC glCompileShader;
-PFNGLCREATEPROGRAMPROC glCreateProgram;
-PFNGLATTACHSHADERPROC glAttachShader;
-PFNGLLINKPROGRAMPROC glLinkProgram;
-PFNGLDELETESHADERPROC glDeleteShader;
-PFNGLUSEPROGRAMPROC glUseProgram;
-PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
-PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
-PFNGLGETSHADERIVPROC glGetShaderiv;
-PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
-PFNGLUNIFORM2FPROC glUniform2f;
-PFNGLUNIFORM2UIVPROC glUniform2uiv;
+#define VERSION_DIRECTIVE "#version 430 core\n"
+#define LINE_DIRECTIVE "#line 1\n"
 
 static GLuint g_program;
+static GLuint g_transformBuffer;
 
-static loadExtensions()
-{
 
-	wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
-	glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC)wglGetProcAddress("glDebugMessageCallback");
-	glDebugMessageControl = (PFNGLDEBUGMESSAGECONTROLPROC)wglGetProcAddress("glDebugMessageControl");
-	glClearBufferfv = (PFNGLCLEARBUFFERFVPROC)wglGetProcAddress("glClearBufferfv");
-	glCreateShader = (PFNGLCREATESHADERPROC)wglGetProcAddress("glCreateShader");
-	glShaderSource = (PFNGLSHADERSOURCEPROC)wglGetProcAddress("glShaderSource");
-	glCompileShader = (PFNGLCOMPILESHADERPROC)wglGetProcAddress("glCompileShader");
-	glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
-	glAttachShader = (PFNGLATTACHSHADERPROC)wglGetProcAddress("glAttachShader");
-	glLinkProgram = (PFNGLLINKPROGRAMPROC)wglGetProcAddress("glLinkProgram");
-	glDeleteShader = (PFNGLDELETESHADERPROC)wglGetProcAddress("glDeleteShader");
-	glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
-	glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
-	glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
-	glGetShaderiv = (PFNGLGETSHADERIVPROC)wglGetProcAddress("glGetShaderiv");
-	glGetShaderInfoLog =  (PFNGLGETSHADERINFOLOGPROC)wglGetProcAddress("glGetShaderInfoLog");
-	glUniform2f = (PFNGLUNIFORM2FPROC)wglGetProcAddress("glUniform2f");
-	glUniform2uiv = (PFNGLUNIFORM2UIVPROC)wglGetProcAddress("glUniform2uiv");
-}
 
 static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint id, GLenum _severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -96,13 +59,22 @@ static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint i
 
 
 
-	printf("GLDEBUG(%s) %s error: %s (%s)\n", severity, source, message, type);
+	printf("\nGLDEBUG(%s, %s):\n%s (%s)\n", severity, source, message, type);
 }
 
-static GLuint compileShader(GLenum type, char* src)
+static GLuint compileShader(GLenum type, char* src, char* header)
 {
 	GLuint shader = glCreateShader(type);
-	glShaderSource(shader, 1, &src, NULL);
+	if (header == 0)
+	{
+		glShaderSource(shader, 1, &src, NULL);
+	}
+	else
+	{
+		char* srcs[] = { VERSION_DIRECTIVE, header, LINE_DIRECTIVE, src };
+		glShaderSource(shader, 4, srcs, NULL);
+	}
+		
 	glCompileShader(shader);
 
 	int isCompiled;
@@ -117,8 +89,9 @@ static GLuint compileShader(GLenum type, char* src)
 		glDeleteShader(shader); 
 
 		assert("shaderCompilationFailed" && 0);
-		
 	}
+
+	
 
 	return shader;
 }
@@ -143,20 +116,207 @@ static void packColors(int* unpacked, unsigned int* packed)
 	{
 		for (int i = 0; i < 8; ++i)
 		{
-			int shift = (j * 8 + i) * 3;
-			int idx = shift / 32;
-			if (shift + 3 > 32)
-			{
-				packed[idx] |= unpacked[j * 8 + i] << (shift % 32);
-				packed[idx+1] |= unpacked[j*8 +i] << 
-			}
-			else
-			{
-				packed[idx] |= unpacked[i + 8 * j] << (shift%32);
-			}
+			int unpackedIdx = j * 8 + i;
+			int totalShift = unpackedIdx * 3;
+			int packedIdx = totalShift / 32;
+			int shift = totalShift % 32;
+
+			
+			packed[packedIdx] |= (unpacked[unpackedIdx] << shift);
+
+			if (shift >= 30)
+				packed[packedIdx + 1] |= (unpacked[unpackedIdx] >> (32 - shift));
 		}
 	}
 }
+
+static void unPackColors(unsigned int* packed, int* unpacked)
+{
+	for (int j = 0; j < 8; ++j)
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			int unpackedIdx = j * 8 + i;
+			int totalShift = unpackedIdx * 3;
+			int packedIdx = totalShift / 32;
+			int shift = totalShift % 32;
+
+
+			unpacked[unpackedIdx] |= (packed[packedIdx] >> shift) & (1 << 3)-1;
+
+			if (shift >= 30)
+				unpacked[unpackedIdx] |= (packed[packedIdx+1] & (1 << (shift-32 + 3))-1) << (32 - shift);
+		}
+	}
+}
+
+
+
+void setUpShips()
+{
+	int destruction[] = {
+		1,1,1,1,1,1,1,0,
+		1,1,1,1,1,1,1,0,
+		1,1,1,1,1,0,0,0,
+		1,1,1,1,1,1,1,0,
+		0,0,1,1,1,0,0,0,
+		0,0,0,1,1,1,0,0,
+		0,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1
+	};
+
+	unsigned int _destruction[2] = { 0,0 };
+
+	packDestruction(destruction, _destruction);
+
+
+	int colors[] = {
+		0,1,2,3,4,5,6,7,
+		0,0,1,1,2,2,3,3,
+		4,4,5,5,6,6,7,7,
+		0,0,0,1,1,1,2,2,
+		2,3,3,3,4,4,4,5,
+		5,5,6,6,6,7,7,7,
+		0,7,1,6,2,5,3,4,
+		7,6,5,4,3,2,1,0
+	};
+
+	unsigned int _colors[6] = { 0 };
+
+	packColors(colors, _colors);
+
+	float colorPalette[8][4] =
+	{
+		{ 1.0f, 1.0f, 1.0f },
+		{ 0.0f, 0.0f, 0.0f },
+		{ 1.0f, 0.0f, 0.0f },
+		{ 0.0f, 1.0f, 0.0f },
+		{ 0.0f, 0.0f, 1.0f },
+		{ 1.0f, 1.0f, 0.0f },
+		{ 0.0f, 1.0f, 1.0f },
+		{ 1.0f, 0.0f, 1.0f }
+	};
+
+
+	float angle = 0.3f;
+	float transform[12] =
+	{
+		cosf(angle), -sinf(angle), 0, 0,
+		sinf(angle), cosf(angle), 0, 0,
+		0, 0, 1, 0
+	};
+
+
+	// set up plates
+	struct StaticData
+	{
+		int pos[2];
+		int shipIdx;
+		int colorIdx;
+	} staticData[16] = { 0 };
+	
+	for (int j = 0; j < 4; ++j)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			staticData[j * 4 + i].pos[0] = i - 1;
+			staticData[j * 4 + i].pos[1] = j - 1;
+		}
+	}
+
+
+	int destructionIdx[16] = { 0 };
+
+	GLuint buffers[2];
+	glGenBuffers(2, buffers);
+
+	GLuint staticBuffer = buffers[0];
+	GLuint destructionBuffer = buffers[1];
+	
+	//fill buffers
+	glBindBuffer(GL_ARRAY_BUFFER, staticBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(staticData), &staticData, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, destructionBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(destructionIdx), &destructionIdx, GL_DYNAMIC_DRAW);
+	
+	//set up attribs
+	int offsets[] = { 0,0 };
+	size_t strides[] = { sizeof(struct StaticData), sizeof(int) };
+	glBindVertexBuffers(0, 2, buffers, offsets, strides);
+
+	glVertexBindingDivisor(0, 1);
+	glVertexBindingDivisor(1, 1);
+	
+	glVertexAttribIFormat(POS_ATTRIB_LOC, 2, GL_INT, offsetof(struct StaticData, pos));
+	glVertexAttribIFormat(SHIP_IDX_ATTRIB_LOC, 1, GL_INT, offsetof(struct StaticData, shipIdx));
+	glVertexAttribIFormat(COLOR_IDX_ATTRIB_LOC, 1, GL_INT, offsetof(struct StaticData, colorIdx));
+	glVertexAttribIFormat(DESTRUCTION_IDX_ATTRIB_LOC, 1, GL_INT,0);
+
+	glVertexAttribBinding(POS_ATTRIB_LOC, 0);
+	glVertexAttribBinding(SHIP_IDX_ATTRIB_LOC, 0);
+	glVertexAttribBinding(COLOR_IDX_ATTRIB_LOC, 0);
+	glVertexAttribBinding(DESTRUCTION_IDX_ATTRIB_LOC, 1);
+
+	glEnableVertexAttribArray(POS_ATTRIB_LOC);
+	glEnableVertexAttribArray(SHIP_IDX_ATTRIB_LOC);
+	glEnableVertexAttribArray(COLOR_IDX_ATTRIB_LOC);
+	glEnableVertexAttribArray(DESTRUCTION_IDX_ATTRIB_LOC);
+
+
+
+	
+
+	// set up destruction
+	{
+		GLuint destructionBuffer;
+		glGenBuffers(1, &destructionBuffer);
+		glBindBuffer(GL_TEXTURE_BUFFER, destructionBuffer);
+		glBufferData(GL_TEXTURE_BUFFER, sizeof(int) * 2, &_destruction, GL_STATIC_DRAW);
+
+		GLuint destructionTexture;
+		glGenTextures(1, &destructionTexture);
+		glActiveTexture(GL_TEXTURE0 + DESTRUCTION_TEX_BINDING);
+		glBindTexture(GL_TEXTURE_BUFFER, destructionTexture);
+		glTexBuffer(GL_TEXTURE_BUFFER, GL_R32UI, destructionBuffer);
+	}
+
+	// set up color
+	{
+		GLuint colorBuffer;
+		glGenBuffers(1, &colorBuffer);
+		glBindBuffer(GL_TEXTURE_BUFFER, colorBuffer);
+		glBufferData(GL_TEXTURE_BUFFER, sizeof(int) * 6, &_colors, GL_STATIC_DRAW);
+
+		GLuint colorTexture;
+		glGenTextures(1, &colorTexture);
+		glActiveTexture(GL_TEXTURE0 + COLOR_TEX_BINDING);
+		glBindTexture(GL_TEXTURE_BUFFER, colorTexture);
+		glTexBuffer(GL_TEXTURE_BUFFER, GL_R32UI, colorBuffer);
+	}
+
+	// set up color palette
+	{
+		GLuint colorPaletteBuffer;
+		glGenBuffers(1, &colorPaletteBuffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, colorPaletteBuffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(colorPalette), colorPalette[0], GL_STATIC_DRAW);
+		glBindBufferBase(GL_UNIFORM_BUFFER, COLOR_PALETTE_UNI_BINDING, colorPaletteBuffer);
+	}
+
+	// set up ship transforms
+	{
+		
+		GLuint shipTransforms;
+		glGenBuffers(1, &shipTransforms);
+		glBindBuffer(GL_UNIFORM_BUFFER, shipTransforms);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(transform), transform, GL_DYNAMIC_DRAW);
+		glBindBufferBase(GL_UNIFORM_BUFFER, TRANSFORM_UNI_BINDING, shipTransforms);
+		g_transformBuffer = shipTransforms;
+	}
+
+}
+
+
 
 void initGraphics(int width, int height, WindowHandle window)
 {
@@ -189,8 +349,7 @@ void initGraphics(int width, int height, WindowHandle window)
 
 	//load extensions
 
-	loadExtensions();
-
+	wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
 
 	// make real one
 	{
@@ -212,7 +371,8 @@ void initGraphics(int width, int height, WindowHandle window)
 	}
 	//destroy temp context
 	wglDeleteContext(tempContext);
-	
+
+	loadExtensions(dc);
 
 	//add debug functionality
 #ifdef _DEBUG
@@ -223,59 +383,71 @@ void initGraphics(int width, int height, WindowHandle window)
 
 	glViewport(0, 0, width, height);
 
-	char buffer[1024] = { 0 };
-	FILE* file = fopen("data/shader/test.vs", "r");
-	fread(buffer, sizeof(char), 1024, file);
 
-	const GLchar* source = buffer;
-	GLuint vs = compileShader(GL_VERTEX_SHADER, buffer);
+	char header[2048] = { 0};
+
+	FILE* file = fopen("data/shader/shaderDefinitions.h", "r");
+	fread(header, sizeof(char), sizeof(header), file);
 	fclose(file);
+
+
+	char src[2048] = { 0 };
+	file = fopen("data/shader/test.vs", "r");
+	fread(src, sizeof(char), sizeof(src), file);
+	fclose(file);
+	
+	GLuint vs = compileShader(GL_VERTEX_SHADER, src, header);
 
 	file = fopen("data/shader/test.fs", "r");
-	memset(buffer, 0, sizeof(buffer));
-	fread(buffer, sizeof(char), 1024, file);
-
-	GLuint fs = compileShader(GL_FRAGMENT_SHADER, buffer);
+	memset(src, 0, sizeof(src));
+	fread(src, sizeof(char), sizeof(src), file);
 	fclose(file);
-	
-	
 
+	GLuint fs = compileShader(GL_FRAGMENT_SHADER, src, header);
 
 	g_program = glCreateProgram();
 	glAttachShader(g_program, vs);
 	glAttachShader(g_program, fs);
 	glLinkProgram(g_program);
 
+	GLint isLinked = 0;
+	glGetProgramiv(g_program, GL_LINK_STATUS, &isLinked);
+	if (isLinked == GL_FALSE)
+	{
+		char error[512];
+
+		glGetProgramInfoLog(g_program, 512, NULL, error);
+
+		printf("Link Error: %s", error);
+		glDeleteProgram(g_program);
+
+		assert("ProgramLinkingFailed" && 0);
+
+	}
+
+
 	glDeleteShader(vs);
 	glDeleteShader(fs);
 
+	GLint test = glGetUniformLocation(g_program, "screensize");
 
 	GLuint vertexArrayObject;
 	glGenVertexArrays(1, &vertexArrayObject);
 	glBindVertexArray(vertexArrayObject);
-
-
-	int destruction[] = {
-		1,1,1,1,1,1,1,0,
-		1,1,1,1,1,1,1,0,
-		1,1,1,1,1,0,0,0,
-		1,1,1,1,1,1,1,0,
-		0,0,1,1,1,0,0,0,
-		0,0,0,1,1,1,0,0,
-		0,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1
-	};
-
-	unsigned int _destruction[2] = { 0,0 };
-
-	packDestruction(destruction, _destruction);
-
+	
 	glUseProgram(g_program);
-	glUniform2uiv(5, 1, _destruction);
-	glUniform2f(0, 800.0f, 600.0f);
+
+	setUpShips();
+
+	//glUniform1uiv(5, 2, _destruction);
+	//glUniform1uiv(7, 6, _colors);
+	glUniform2f(SCREEN_SIZE_UNI_LOC, 800.0f, 600.0f);
 
 
 }
+
+
+
 
 void render()
 {
@@ -284,13 +456,22 @@ void render()
 	glClearBufferfv(GL_COLOR, 0, color);
 	glClearBufferfv(GL_DEPTH, 0, &one);
 
+	static float angle = 0.0f;
 
-
-	glUseProgram(g_program);
-
+	angle += 0.001f;
+	glBindBuffer(GL_UNIFORM_BUFFER, g_transformBuffer);
+	float* transform = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+	transform[0] = cosf(angle);
+	transform[1] = -sinf(angle);
+	transform[4] = sinf(angle);
+	transform[5] = cosf(angle);
 	
+	glUnmapBuffer(GL_UNIFORM_BUFFER);
+	//glBindBufferBase(GL_UNIFORM_BUFFER, TRANSFORM_UNI_BINDING, g_transformBuffer);
 
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	//glUseProgram(g_program);
+
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 16);
 
 }
 
