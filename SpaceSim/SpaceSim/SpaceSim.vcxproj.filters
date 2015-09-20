@@ -39,6 +39,15 @@
     <ClCompile Include="..\src\Graphics_Extension_WIN32.c">
       <Filter>Source Files\WIN32</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Physics.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Memory_WIN32.cpp">
+      <Filter>Source Files\WIN32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Game.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Window.h">
@@ -52,6 +61,24 @@
     </ClInclude>
     <ClInclude Include="..\bin\data\shader\ShaderDefinitions.h">
       <Filter>Resource Files\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\GameData.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\defines.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Memory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Physics.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Math.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Game.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

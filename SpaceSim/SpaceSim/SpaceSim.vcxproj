@@ -90,16 +90,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Game.c" />
     <ClCompile Include="..\src\Graphics_Extension_WIN32.c" />
     <ClCompile Include="..\src\Graphics_WIN32.c" />
     <ClCompile Include="..\src\JobSystem_WIN32.c" />
     <ClCompile Include="..\src\main.c" />
+    <ClCompile Include="..\src\Memory_WIN32.cpp" />
+    <ClCompile Include="..\src\Physics.c" />
     <ClCompile Include="..\src\Window_WIN32.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\bin\data\shader\ShaderDefinitions.h" />
+    <ClInclude Include="..\src\defines.h" />
+    <ClInclude Include="..\src\Game.h" />
+    <ClInclude Include="..\src\GameData.h" />
     <ClInclude Include="..\src\Graphics.h" />
     <ClInclude Include="..\src\JobSystem.h" />
+    <ClInclude Include="..\src\Math.h" />
+    <ClInclude Include="..\src\Memory.h" />
+    <ClInclude Include="..\src\Physics.h" />
     <ClInclude Include="..\src\Window.h" />
   </ItemGroup>
   <ItemGroup>

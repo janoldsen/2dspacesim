@@ -15,6 +15,7 @@
 static GLuint g_program;
 static GLuint g_transformBuffer;
 
+#include "Math.h"
 
 
 static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint id, GLenum _severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -296,14 +297,14 @@ void setUpShips()
 		{ 0.1f, 0.1f, 0.1f }
 	},
 	{
-		{ 0.0f, 0.0f, 0.8f },
-		{ 0.0f, 0.0f, 0.7f },
-		{ 0.0f, 0.0f, 0.6f },
-		{ 0.0f, 0.0f, 0.5f },
-		{ 0.0f, 0.0f, 0.4f },
-		{ 0.0f, 0.0f, 0.3f },
-		{ 0.0f, 0.0f, 0.2f },
-		{ 0.0f, 0.0f, 0.1f }
+		{ 0.99f, 0.0f, 0.0f },
+		{ 1.0f, 0.61f, 0.0f },
+		{ 0.97f, 0.99f, 0.0f },
+		{ 0.235f, 0.94f, 0.05f },
+		{ 0.0f, 1.0f, 0.89f },
+		{ 0.0f, 0.14f, 1.0f },
+		{ 0.77f, 0.0f, 1.0f },
+		{ 1.0f, 0.0f, 0.61f }
 	}
 	};
 
@@ -312,57 +313,58 @@ void setUpShips()
 	float transform[2][12] =
 	{
 	{
-		1, 0, -200, 0,
+		1, 0, -500, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 	},
 	{
-		1, 0, 200, 0,
+		1, 0, 500, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 	}
 	};
 
 
+#define size 16
 	// set up plates
 	struct StaticData
 	{
 		int pos[2];
 		int shipIdx;
 		int colorIdx;
-	} staticData[2][16] = { 0 };
-	int destructionIdx[2][16] = { 0 };
+	} staticData[2][size*size] = { 0 };
+	int destructionIdx[2][size*size] = { 0 };
 	
 	for (int k = 0; k < 2; ++k)
 	{
-		for (int j = 0; j < 4; ++j)
+		for (int j = 0; j < size; ++j)
 		{
-			for (int i = 0; i < 4; ++i)
+			for (int i = 0; i < size; ++i)
 			{
 				int color = 8;
-				if (i == 0 && j == 3)
+				if (i == 0 && j == (size-1))
 					color = 0;
 				else if (i == 0 && j == 0)
 					color = 1;
-				else if (i == 3 && j == 0)
+				else if (i == (size-1) && j == 0)
 					color = 2;
-				else if (i == 3 && j == 3)
+				else if (i == (size-1) && j == (size-1))
 					color = 3;
 				else if (i == 0)
 					color = 4;
-				else if (i == 3)
+				else if (i == (size-1))
 					color = 5;
-				else if (j == 3)
+				else if (j == (size-1))
 					color = 6;
 				else if (j == 0)
 					color = 7;
 				else
-					destructionIdx[k][j * 4 + i] = 1;
+					destructionIdx[k][j * size + i] = 1;
 
-				staticData[k][j * 4 + i].pos[0] = i - 1;
-				staticData[k][j * 4 + i].pos[1] = j - 1;
-				staticData[k][j * 4 + i].shipIdx = k;
-				staticData[k][j * 4 + i].colorIdx = color;
+				staticData[k][j * size + i].pos[0] = i - size/2;
+				staticData[k][j * size + i].pos[1] = j - size/2;
+				staticData[k][j * size + i].shipIdx = k;
+				staticData[k][j * size + i].colorIdx = color;
 			}
 		}
 	}
@@ -619,7 +621,7 @@ void render()
 
 	//glUseProgram(g_program);
 
-	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 32);
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, size*size*2);
 
 }
 

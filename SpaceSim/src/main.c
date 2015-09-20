@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// todos
+// -check cpu culling vs gpu culling
+
 
 void mainJob(void* args)
 {
