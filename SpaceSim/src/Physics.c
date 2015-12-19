@@ -1,11 +1,10 @@
 #include "Physics.h"
 #include "Math.h"
 
-
-typedef struct
-{
-
-} Island;
+// COLLISION
+// render objects in RG-int-texture
+// id is tile id in upper bits and pixel id in lower bits
+// write +id in R and -id in G and blend with MIN operations
 
 
 typedef struct PhysicsShipData

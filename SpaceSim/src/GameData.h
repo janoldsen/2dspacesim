@@ -10,7 +10,7 @@ typedef struct PhysicsShipData PhysicsShipData;
 
 typedef struct DestructionMap
 {
-	uint32 a[2]
+	uint32 a[2];
 } DestructionMap;
 
 
