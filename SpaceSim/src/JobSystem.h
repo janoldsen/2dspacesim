@@ -23,7 +23,7 @@ void startMainThread();
 
 void runJobs(JobDecl* pJobs, int numJobs, Counter** ppCounter);
 void runJobsInThread(JobDecl* pJobs, int numJobs, Counter** ppCounter, int threadId);
-
+void deleteCounter(Counter* pCounter);
 void waitForCounter(Counter* pCounter);
 
 void printJobSystemDebug(FILE* pFile);

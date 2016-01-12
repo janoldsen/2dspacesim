@@ -20,6 +20,7 @@ x86/
 build/
 bld/
 [Oo]bj/
+TEMP/
 
 # Visual Studo 2015 cache/options directory
 .vs/
@@ -70,6 +71,7 @@ ipch/
 *.aps
 *.ncb
 *.opensdf
+*.opendb
 *.sdf
 *.cachefile
 

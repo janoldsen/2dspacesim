@@ -27,25 +27,25 @@
     <ClCompile Include="..\src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Graphics_WIN32.c">
-      <Filter>Source Files\WIN32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\JobSystem_WIN32.c">
-      <Filter>Source Files\WIN32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Window_WIN32.c">
-      <Filter>Source Files\WIN32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Graphics_Extension_WIN32.c">
-      <Filter>Source Files\WIN32</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Physics.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Memory_WIN32.cpp">
-      <Filter>Source Files\WIN32</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Game.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics_Extension_WIN32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Graphics_WIN32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\JobSystem_WIN32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Memory_WIN32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Window_WIN32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

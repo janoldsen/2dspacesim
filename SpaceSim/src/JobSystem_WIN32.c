@@ -5,23 +5,29 @@
 
 #define MAX_NUMBER_PROCESSORS 16
 #define FIBER_STACK_SIZE (1 << 16)
-#define MAX_GLOBAL_JOB_QUEUE_SIZE 1024
-#define MAX_LOCAL_JOB_QUEUE_SIZE 256
+#define MAX_JOBS 1024
 #define MAX_COUNTERS 1024
+#define IDLE_SLEEP_TIME 10
 
 
 // no seperate queues for local jobs,
 // store thread in fiber as bitpattern
 // and check thread before popping...
 
+// counter needs to be rewritten(counters can be deallocated too soon)...
+
+// rewrite job queue as job list
+
 typedef long atomic;
 
-typedef struct
+typedef struct Job
 {
 	void(*fpFunction)(void* pParams);
 	void* pParams;
 	char* pName;
-	Counter* pCounter;
+	int threadId;
+Counter* pCounter;
+struct Job* pNextJob;
 } Job;
 
 
@@ -40,16 +46,22 @@ typedef struct Fiber
 	LPVOID fiber;
 	struct Fiber* pNextInWaitList;
 	FiberStatus status;
-	int currentThread;
-	Job* currentJob;
+	Job* pCurrentJob;
 } Fiber;
 
+typedef struct
+{
+	HANDLE handle;
+	int id;
+	Job* pJobQueueTail;
+	Fiber* pCurrentFiber;
+} Thread;
 
 typedef struct Counter
 {
-	Fiber* pWaitList;
+	Fiber* pWaitListHead;
+	Fiber pWaitListZ;
 	atomic counter;
-	atomic lock;
 } Counter;
 
 typedef struct
@@ -67,83 +79,26 @@ static Fiber* g_pFiberPool[NUM_FIBERS];
 static Fiber g_fibers[NUM_FIBERS];
 
 static int g_numProcessors;
-static HANDLE g_threads[MAX_NUMBER_PROCESSORS];
+static Thread g_threads[MAX_NUMBER_PROCESSORS];
+static DWORD g_threadData;
 
 
-static JobQueue g_globalJobQueue;
-static Job g_globalJobs[MAX_GLOBAL_JOB_QUEUE_SIZE];
+static Job g_jobs[MAX_JOBS];
+static Job* g_pFreeJob;
+static Job g_dummyJob;
+static Job* g_pJobQueueHead;
 
-static JobQueue g_localJobQueues[MAX_NUMBER_PROCESSORS];
-static Job g_localJobs[MAX_LOCAL_JOB_QUEUE_SIZE][MAX_NUMBER_PROCESSORS];
 
-static atomic g_counterLock = 0;
 static Counter* g_pNextCounter;
 static Counter g_counters[MAX_COUNTERS];
 
 static atomic g_globalWaitListLock;
-static Fiber* g_pGlobalWaitList;
+static Fiber* g_pWaitListHead;
+static Fiber g_pWaitListTail;
 
-static int g_threadIds[MAX_NUMBER_PROCESSORS];
 
 static void allocCounter(Counter** ppCounter);
 
-static void pushJobs(JobDecl* pJobDecls, int numJobs, Counter** ppCounter, JobQueue* pQueue)
-{
-	// grab memory space
-	for (int i = 0; i < numJobs; ++i)
-	{
-		int oldBack;
-		// get back
-		for (;;)
-		{
-			oldBack = pQueue->back;
-
-			int newBack = (oldBack + 1) % pQueue->maxJobs;
-
-			if (InterlockedCompareExchange(&pQueue->back, newBack, oldBack) == oldBack)
-				break;
-		}
-
-		//alloc counter
-		if (ppCounter != NULL)
-		{
-			allocCounter(ppCounter);
-			(*ppCounter)->counter = numJobs;
-		}
-
-
-		pQueue->pJobs[oldBack].fpFunction = pJobDecls[i].fpFunction;
-		pQueue->pJobs[oldBack].pParams = pJobDecls[i].pParams;
-		pQueue->pJobs[oldBack].pName = pJobDecls[i].pName;
-		pQueue->pJobs[oldBack].pCounter = ppCounter == 0 ? 0 : *ppCounter;
-
-
-		// ready back
-		for (;;)
-		{
-			if (InterlockedCompareExchange(&pQueue->backRdy, oldBack+1, oldBack) == oldBack)
-				break;
-		}
-	}
-}
-
-static Job* popJob(JobQueue* pQueue)
-{
-
-	
-	for (;;)
-	{
-		// check if empty
-		if (pQueue->front == pQueue->backRdy)
-			return NULL;
-
-		int oldFront = pQueue->front;
-		int newFront = (oldFront == MAX_GLOBAL_JOB_QUEUE_SIZE - 1) ? 0 : oldFront + 1;
-		if (InterlockedCompareExchange(&pQueue->front, newFront, oldFront) == oldFront)
-			return &pQueue->pJobs[oldFront];
-	}
-
-}
 
 void initCounterAllocator()
 {
@@ -161,27 +116,35 @@ void initCounterAllocator()
 
 void allocCounter(Counter** ppCounter)
 {
-	//lock
-	while (InterlockedCompareExchange(&g_counterLock, 1, 0) != 0);
-	
 	assert("ppCounter allocation size to small!" && g_pNextCounter != NULL);
 
-	*ppCounter = g_pNextCounter;
-	g_pNextCounter = *(void**)g_pNextCounter;
-	memset(*ppCounter, 0, sizeof(Counter));
+	for (;;)
+	{
+		Counter* pOldNextCounter = g_pNextCounter;
+		*ppCounter = pOldNextCounter;
+		if (InterlockedCompareExchangePointer(&g_pNextCounter, *(void**)g_pNextCounter, pOldNextCounter) == pOldNextCounter)
+		{
+			memset(*ppCounter, 0, sizeof(Counter));
+			(*ppCounter)->pWaitListHead = &(*ppCounter)->pWaitListZ;
+			return;
+		}
 
-	InterlockedExchange(&g_counterLock, 0);
+	}
 }
 
 
 void freeCounter(Counter* counter)
 {
 	//lock
-	while (InterlockedCompareExchange(&g_counterLock, 0, 1) != 0);
-	*(void**)(counter) = g_pNextCounter;
-	g_pNextCounter = counter;
-
-	InterlockedExchange(&g_counterLock, 0);
+	for (;;)
+	{
+		Counter* pOldNextCounter = g_pNextCounter;
+		*(void**)(counter) = g_pNextCounter;
+		if (InterlockedCompareExchangePointer(&g_pNextCounter, counter, pOldNextCounter) == pOldNextCounter)
+		{
+			break;
+		}
+	}
 }
 
 
@@ -189,33 +152,57 @@ void switchFiber(Fiber* pCurrFiber, Fiber* pNewFiber)
 {
 	pCurrFiber->status = FREE;
 	pNewFiber->status = RUNNING;
-	pNewFiber->currentThread = pCurrFiber->currentThread;
-	
-	pCurrFiber->currentThread = -1;
-	pCurrFiber->currentJob = NULL;
+
+	pCurrFiber->pCurrentJob = NULL;
 
 
 	//push current fiber in the fiber pool
 	g_pFiberPool[InterlockedIncrement(&g_fiberPoolHead)] = pCurrFiber;
 	// switch to new fiber
+
+	Thread* thread = TlsGetValue(g_threadData);
+	thread->pCurrentFiber = pNewFiber;
+	
 	SwitchToFiber(pNewFiber->fiber);
 }
 
-void runNewFiber(int threadId)
+void runNewFiber()
 {
 	Fiber* fiber = g_pFiberPool[InterlockedDecrement(&g_fiberPoolHead) + 1];
 	fiber->status = RUNNING;
-	fiber->currentThread = threadId;
+
+	Thread* thread = TlsGetValue(g_threadData);
+	thread->pCurrentFiber = fiber;
 	SwitchToFiber(fiber->fiber);
 }
 
-unsigned int __stdcall threadStart(void* id)
+unsigned int __stdcall threadStart(void* threadData)
 {
-	
+	TlsSetValue(g_threadData, threadData);
+
 	ConvertThreadToFiber(0);
-	runNewFiber(*((int*)id));
+	runNewFiber();
 	ConvertFiberToThread();
 	return 0;
+}
+
+static void pushCounterWaitList(Counter* pCounter)
+{
+	if (pCounter->pWaitListHead == &pCounter->pWaitListZ)
+		return;
+
+	
+	for (;;)
+	{
+		Fiber* oldWaitListHead = g_pWaitListHead;
+		//pLastInWaitList->pNextInWaitList = oldWaitList;
+		if (InterlockedCompareExchangePointer(&g_pWaitListHead, pCounter->pWaitListHead, oldWaitListHead) == oldWaitListHead)
+		{
+			oldWaitListHead->pNextInWaitList = pCounter->pWaitListZ.pNextInWaitList;
+			break;
+		}
+
+	}
 }
 
 void __stdcall fiberRoutine(void* args)
@@ -223,95 +210,107 @@ void __stdcall fiberRoutine(void* args)
 
 	Fiber* pSelf = args;
 
+
 	while (1)
 	{
-		
+		Thread* pThread = TlsGetValue(g_threadData);
+		//check waitlist
+		for (;;)
+		{
+			Fiber* pFiber = g_pWaitListTail.pNextInWaitList;
+			Fiber* pLastFiber = &g_pWaitListTail;
+
+			while (pFiber != NULL && !(pFiber->pCurrentJob->threadId & pThread->id))
+			{
+				pLastFiber = pFiber;
+				pFiber = pFiber->pNextInWaitList;
+			}
+
+			// no job in wait list
+			if (pFiber == NULL)
+				break;
+
+			// unlink
+			if (InterlockedCompareExchangePointer(&pLastFiber->pNextInWaitList, pFiber->pNextInWaitList, pFiber) == pFiber)
+			{
+				// wake fiber
+				switchFiber(pSelf, pFiber->fiber);
+			}
+
+		}
+
+
 		//grab new job
 		Job* pJob = NULL;
 		pSelf->status = NO_JOB;
+
 		for (;;)
 		{
-			// check first for local jobs ...
-			pJob = popJob(&g_localJobQueues[pSelf->currentThread]);
-			if (pJob != NULL)
-				break;
-			// ... then for global jobs
-			pJob = popJob(&g_globalJobQueue);
+			// iterate list to find next thread compatible job
+			// unlink this job and set the job before that as new tail
+			// if end of list is reached set the tail to the last link
 
-			if (pJob != NULL)
+			pJob = pThread->pJobQueueTail->pNextJob;
+			Job* pLastJob = pThread->pJobQueueTail;
+
+			while (pJob != NULL && !(pJob->threadId & pThread->id))
+			{
+				pLastJob = pJob;
+				pJob = pJob->pNextJob;
+			}
+
+			// no job found
+			if (pJob == NULL)
+			{
+				Sleep(IDLE_SLEEP_TIME);
+				pThread->pJobQueueTail = pLastJob;
+				continue;
+			}
+
+			assert(pJob->fpFunction != (void(*)(void*))0xFEFEFEFE);
+
+			// unlink job
+			if (InterlockedCompareExchangePointer(&pLastJob->pNextJob, pJob->pNextJob, pJob) == pJob)
+			{
+				pThread->pJobQueueTail = pLastJob;
 				break;
-		
-			// no job available
-			Sleep(10);
+			}
+
 		}
-		
-		Job currentJob = *pJob;
-		pSelf->currentJob = &currentJob;
 
+		// execute Job
+		pSelf->pCurrentJob = pJob;
 		pSelf->status = RUNNING;
-		currentJob.fpFunction(currentJob.pParams);
+
+		pJob->fpFunction(pJob->pParams);
+		
+		pSelf->pCurrentJob = NULL;
+		
 
 #ifdef _DEBUG
 		pJob->fpFunction = (void(*)(void*))0xFEFEFEFE;
 #endif
-		
+		Counter* pCounter = pJob->pCounter;
+
+		// dealloc job
+		for (;;)
+		{
+			Job* pOldFreeJob = g_pFreeJob;
+			pJob->pNextJob = g_pFreeJob;
+
+
+			if (InterlockedCompareExchangePointer(&g_pFreeJob, pJob, pOldFreeJob) == pOldFreeJob)
+				break;
+		}
 
 		// decrement counter and check wait list
-		if (currentJob.pCounter != 0 && InterlockedDecrement(&currentJob.pCounter->counter) == 0)
+		if (pCounter != 0 && InterlockedDecrement(&pCounter->counter) == 0)
 		{
 			// should be threadsafe because only one fiber will reach the counter to zero
-			Counter* pCounter = currentJob.pCounter;
-			if (pCounter->pWaitList != NULL)
+			if (pCounter->pWaitListHead != &pCounter->pWaitListZ)
 			{
-				if (pCounter->pWaitList->pNextInWaitList != NULL)
-				{
-					//put remaining wait list in global wait list
-					//lock
-					while (InterlockedCompareExchange(&g_globalWaitListLock, 0, 1) != 0);
-
-					if (g_pGlobalWaitList == 0)
-					{
-						g_pGlobalWaitList = pCounter->pWaitList->pNextInWaitList;
-					}
-					else
-					{
-						Fiber* pFiber = g_pGlobalWaitList;
-						// goto end of list
-						while (pFiber->pNextInWaitList != NULL)
-						{
-							pFiber = pFiber->pNextInWaitList;
-						}
-						pFiber->pNextInWaitList = pCounter->pWaitList->pNextInWaitList;
-
-					}
-					InterlockedExchange(&g_globalWaitListLock, 0);
-
-					pCounter->pWaitList = NULL;
-				}
-
-				// switch to wait fiber
-				Fiber* pWaitingFiber = pCounter->pWaitList;
-				// free counter
-				freeCounter(pCounter);
-				switchFiber(pSelf, pWaitingFiber);
-				continue;
-			}
-		}
-		else
-		{
-			//lock
-			Fiber* pNewFiber = NULL;
-			while (InterlockedCompareExchange(&g_globalWaitListLock, 0, 1) != 0);
-			if (g_pGlobalWaitList != NULL)
-			{
-				Fiber* pNewFiber = g_pGlobalWaitList;
-				g_pGlobalWaitList = g_pGlobalWaitList->pNextInWaitList;
-			}
-			InterlockedExchange(&g_globalWaitListLock, 0);
-
-			if (pNewFiber != NULL)
-				switchFiber(pSelf, pNewFiber);
-			continue;
+				pushCounterWaitList(pCounter);
+			} 
 		}
 
 	}
@@ -333,41 +332,43 @@ void initJobSystem()
 		g_fibers[i].fiber = CreateFiber(FIBER_STACK_SIZE, fiberRoutine, g_fibers + i);
 		g_fibers[i].pNextInWaitList = NULL;
 		g_fibers[i].status = UNUSED;
-		g_fibers[i].currentThread = -1;
 		g_pFiberPool[NUM_FIBERS - 1 - i] = g_fibers + i;
 	}
 
 
 
-	//init job queues
-	g_globalJobQueue.front = 0;
-	g_globalJobQueue.back = 0;
-	g_globalJobQueue.backRdy = 0;
-	g_globalJobQueue.pJobs = g_globalJobs;
-	g_globalJobQueue.maxJobs = MAX_GLOBAL_JOB_QUEUE_SIZE;
+	//init jobs
+
+	for (int i = 1; i < MAX_JOBS; ++i)
+	{
+		g_jobs[i - 1].pNextJob = g_jobs + i;
+	}
+	g_pFreeJob = g_jobs;
+	g_dummyJob.threadId = 0x0;
+	g_pJobQueueHead = &g_dummyJob;
+
+	//spawn threads
+	g_threadData = TlsAlloc();
 
 	for (int i = 0; i < g_numProcessors; ++i)
 	{
-		g_localJobQueues[i].front = 0;
-		g_localJobQueues[i].back = 0;
-		g_localJobQueues[i].backRdy = 0;
-		g_localJobQueues[i].pJobs = g_localJobs[i];
-		g_localJobQueues[i].maxJobs = MAX_LOCAL_JOB_QUEUE_SIZE;
-	}
-
-
-	//spawn threadsg_threads[0] = GetCurrentThread();
-	SetThreadAffinityMask(g_threads[0], 1 << 0);
-
-	
-	for (int i = 1; i < g_numProcessors; ++i)
-	{	
-		g_threadIds[i] = i;
 		//create thread
-		g_threads[i] = CreateThread(NULL, 0, threadStart, g_threadIds+i, 0, NULL);
+		if (i == 0)
+		{
+			g_threads[0].handle = GetCurrentThread();
+		}
+		else
+		{
+			g_threads[i].handle = CreateThread(NULL, 0, threadStart, g_threads + i, 0, NULL);
+		}
+
+		g_threads[i].id = 0x1 << i;
+		g_threads[i].pJobQueueTail = &g_dummyJob;
+
 		//lock thread to specific cpu
-		SetThreadAffinityMask(g_threads[i], 1 << i);
+		SetThreadAffinityMask(g_threads[i].handle, 1 << i);
 	}
+	TlsSetValue(g_threadData, g_threads + 0);
 
 	initCounterAllocator();
 
@@ -375,61 +376,112 @@ void initJobSystem()
 
 void startMainThread()
 {
-	g_threadIds[MAIN_THREAD] = MAIN_THREAD;
-	threadStart(g_threadIds+MAIN_THREAD);
+	threadStart(g_threads + 0);
 }
 
 
 
-void runJobsInThread(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int threadId)
+static void pushJobs(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int threadMask)
 {
-	assert(threadId < g_numProcessors);
-	pushJobs(pJobDcls, numJobs, ppCounter, &g_localJobQueues[threadId]);
+
+	//alloc counter
+	if (ppCounter != NULL)
+	{
+		allocCounter(ppCounter);
+		(*ppCounter)->counter = numJobs;
+	}
+
+	for (int i = 0; i < numJobs; ++i)
+	{
+		Job* pJob;
+		for (;;)
+		{
+			pJob = g_pFreeJob;
+
+			if (InterlockedCompareExchangePointer(&g_pFreeJob, pJob->pNextJob, pJob) == pJob)
+			{
+				pJob->pNextJob = NULL;
+				break;
+			}
+		}
+
+		pJob->fpFunction = pJobDcls[i].fpFunction;
+		pJob->pParams = pJobDcls[i].pParams;
+		pJob->pName = pJobDcls[i].pName;
+		pJob->threadId = threadMask;
+		pJob->pCounter = ppCounter == 0 ? 0 : *ppCounter;
+		
+
+		Job* pOldHead;
+
+		for (;;)
+		{
+			pOldHead = g_pJobQueueHead;
+			if (InterlockedCompareExchangePointer(&g_pJobQueueHead, pJob, pOldHead) == pOldHead)
+			{
+				pOldHead->pNextJob = g_pJobQueueHead;
+				break;
+			}
+		}
+	}
 }
 
 void runJobs(JobDecl* pJobDecls, int numJobs, Counter** ppCounter)
 {
-	pushJobs(pJobDecls, numJobs, ppCounter, &g_globalJobQueue);
+	pushJobs(pJobDecls, numJobs, ppCounter, ~0x0);
+}
+
+void runJobsInThread(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int threadId)
+{
+	assert(threadId < g_numProcessors);
+	pushJobs(pJobDcls, numJobs, ppCounter, 0x1 << threadId);
+}
+
+void deleteCounter(Counter* pCounter)
+{
+	// push remaining wait list into global
+	pushCounterWaitList(pCounter);
+
+	freeCounter(pCounter);
 }
 
 void waitForCounter(Counter* pCounter)
 {
+	// counter already zero
+	if (pCounter->counter == 0)
+		return;
+
 	Fiber* pSelf = GetFiberData();
 
-	// push counter in wait queue
+	// push fiber in wait queue
 	//lock
-	while (InterlockedCompareExchange(&pCounter->lock, 1, 0) != 0);
-	if (pCounter->pWaitList == NULL)
+	pSelf->pNextInWaitList = NULL;
+	for (;;)
 	{
-		pCounter->pWaitList = pSelf;
+		Fiber* pOldWaitListHead = pCounter->pWaitListHead;
+		if (InterlockedCompareExchangePointer(&pCounter->pWaitListHead, pSelf, pOldWaitListHead) == pOldWaitListHead)
+		{
+			pOldWaitListHead->pNextInWaitList= pSelf;
+			break;
+		}
 	}
-	else
-	{
-		Fiber* pFiber = pCounter->pWaitList;
-		while (pFiber->pNextInWaitList != NULL)
-			pFiber = pFiber->pNextInWaitList;
-		pFiber->pNextInWaitList = pSelf;
-	}
-	InterlockedExchange(&pCounter->lock, 0);
 
 	// swap in new fiber
 	pSelf->status = WAITING;
-	int currentThread = pSelf->currentThread;
-	pSelf->currentThread = -1;
-
-	runNewFiber(currentThread);
+	runNewFiber();
 }
 
 
 void printJobSystemDebug(FILE* pFile)
 {
-
-	fprintf(pFile, "\n\n\n\n Current Running Fibers:\n");
-	for (int i = 0; i < NUM_FIBERS; ++i)
+	for (int i = 0; i < g_numProcessors; ++i)
 	{
-		if (g_fibers[i].status == RUNNING)
+		if (g_threads[i].pCurrentFiber)
 		{
-			fprintf(pFile, "\t%2i Thread: %i Job: %s\n", i, g_fibers[i].currentThread, g_fibers[i].currentJob->pName);
+			if (g_threads[i].pCurrentFiber->pCurrentJob)
+				fprintf(pFile, "Thread: %i Job: %s\n", i, g_threads[i].pCurrentFiber->pCurrentJob->pName);
+			else
+				fprintf(pFile, "Thread: %i Idle\n", i);
 		}
 	}
 }

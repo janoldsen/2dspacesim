@@ -29,101 +29,136 @@ void mainJob(void* args)
 void debugJobSystem(void* in)
 {
 	FILE* file = fopen("jobSystem.txt", "w");
-	fclose(file);
-	file = stdout;
+	//fclose(file);
+	//file = stdout;
 
 	for (;;)
 	{
 		printJobSystemDebug(file);
-		//Sleep(100);
+		Sleep(5);
 	}
+	fclose(file);
 }
 
 
-void isDivideable(void* in)
+void print0(void* pIn)
 {
-	struct { int i; int min; int max; int out; } *input = in;
-	
-	for (int i = input->min; i < input->max; i++)
+	int num = *((int*)pIn);
+
+	for (int i = 0; i < num; ++i)
 	{
-		if ((input->i % i) == 0)
-		{
-			//printf("%i is divideable by %i!/n", input->i, i);
-			input->out = 1;
-			return;
-		}
-			
+		printf("thread0: %i(%i)\n", i, num);
+		Sleep(10);
 	}
-
-	
-
 }
 
 
-#define NUM_NEW_JOBS 16
-void isPrime(void* in)
+void print1(void* pIn)
 {
-	int i = *(int*)in;
-	struct { int i; int min; int max; int out; } inputs[128];
-	JobDecl decl[NUM_NEW_JOBS];
-	Counter* pCounter;
 
-	for (int i = 0; i < NUM_NEW_JOBS; ++i)
+	int num = *((int*)pIn);
+
+	for (int i = 0; i < num; ++i)
 	{
-		inputs[i].i = i;
-		inputs[i].min = i / NUM_NEW_JOBS * i;
-		inputs[i].max = i / NUM_NEW_JOBS * (i + 1);
-
-		decl[i].fpFunction = isDivideable;
-		decl[i].pName = "isDiviedable";
-		decl[i].pParams = inputs + i;
+		printf("thread1: %i(%i)\n", i, num);
+		Sleep(10);
 	}
-
-	runJobs(decl, NUM_NEW_JOBS, &pCounter);
-
-	waitForCounter(pCounter);
-
-	for (int i = 0; i < NUM_NEW_JOBS; ++i)
-	{
-		if (inputs[i].out != 0)
-		{
-			printf("%i is not prime!\n", i);
-			return;
-		}
-	}
-	printf("%i is prime!\n", i);
 }
 
+
+void print2(void* pIn)
+{
+
+	int num = *((int*)pIn);
+
+	for (int i = 0; i < num; ++i)
+	{
+		printf("thread2: %i(%i)\n", i, num);
+		Sleep(10);
+	}
+}
+
+
+void print(void* pIn)
+{
+	int num = *((int*)pIn);
+
+	for (int i = 0; i < num; ++i)
+	{
+		printf("%i(%i)\n", i, num);
+		Sleep(10);
+	}
+}
+
+
+#define BAR(A,B,C) printf(A B C);
+#define FOO(...) BAR(__VA_ARGS__)
 
 int main()
 {
+
+	FOO("hello", "world", "!\n");
+	return 0;
+
+
 	initJobSystem();
 
-	JobDecl debugJob;
-	debugJob.fpFunction = debugJobSystem;
-	debugJob.pName = "debug";
-	debugJob.pParams = NULL;
+	JobDecl decls0[10];
+	JobDecl decls1[10];
+	JobDecl decls2[10];
+	JobDecl decls[10];
 
-	runJobsInThread(&debugJob, 1, NULL, 3);
+	JobDecl debug;
+	debug.fpFunction = debugJobSystem;
+	debug.pName = "debug";
+	debug.pParams = 0;
 
+	runJobsInThread(&debug, 1, 0, 3);
+	
+	int numJobs = 1;
 
-	JobDecl primeJobs[32];
-	int numbers[32];
-	Counter* pCounter;
-
-	for (int i = 0; i < 32; ++i)
+	int inputs[10];
+	for (int i = 0; i < numJobs; ++i)
 	{
-		numbers[i] = i + 123456;
-		primeJobs[i].fpFunction = isPrime;
-		primeJobs[i].pParams = numbers + i;
-		primeJobs[i].pName = "isPrime";
+		inputs[i] = (i + 1) * 10;
+
+		decls[i].fpFunction = print;
+		decls[i].pName = "print";
+		decls[i].pParams = inputs + i;
+
+		decls0[i].fpFunction = print0;
+		decls0[i].pName = "print0";
+		decls0[i].pParams = inputs + i;
+
+		decls1[i].fpFunction = print1;
+		decls1[i].pName = "print1";
+		decls1[i].pParams = inputs + i;
+
+		decls2[i].fpFunction = print2;
+		decls2[i].pName = "print2";
+		decls2[i].pParams = inputs + i;
 	}
 
-	runJobsInThread(primeJobs, 32, &pCounter, MAIN_THREAD);
+	Counter* pCounter0;
+	Counter* pCounter1;
+	Counter* pCounter2;
+	Counter* pCounter;
+
+	runJobsInThread(decls0, numJobs, &pCounter0, 0);
+	runJobsInThread(decls1, numJobs, &pCounter1, 1);
+	runJobsInThread(decls2, numJobs, &pCounter2, 2);
+	runJobs(decls, numJobs, &pCounter);
 
 	startMainThread();
 
 	waitForCounter(pCounter);
+	waitForCounter(pCounter0);
+	waitForCounter(pCounter1);
+	waitForCounter(pCounter2);
+
+	printf("All done!\n");
+
+	return 0;
 
 	JobDecl job;
 	job.fpFunction = mainJob;

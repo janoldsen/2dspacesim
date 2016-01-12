@@ -1,0 +1,1956 @@
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print0
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Job: print1
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Job: print2
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Job: print
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread: 3 Job: debug
+Thread: 0 Idle
+Thread: 1 Idle
+Thread: 2 Idle
+Thread
