@@ -6,6 +6,8 @@
 #define NUM_FIBERS 160
 #define MAIN_THREAD 0
 
+#define JOB_ENTRY(name) void name(void* pIn)
+
 typedef struct JobDecl
 {
 	void(*fpFunction)(void* pParams);
