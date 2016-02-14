@@ -35,7 +35,7 @@ void debugJobSystem(void* in)
 	for (;;)
 	{
 		printJobSystemDebug(file);
-		Sleep(5);
+		Sleep(16);
 	}
 	fclose(file);
 }
@@ -91,14 +91,8 @@ void print(void* pIn)
 }
 
 
-#define BAR(A,B,C) printf(A B C);
-#define FOO(...) BAR(__VA_ARGS__)
-
 int main()
 {
-
-	FOO("hello", "world", "!\n");
-	return 0;
 
 
 	initJobSystem();
@@ -113,14 +107,15 @@ int main()
 	debug.pName = "debug";
 	debug.pParams = 0;
 
-	runJobsInThread(&debug, 1, 0, 3);
+	//runJobsInThread(&debug, 1, 0, numJobSystemThreads()-1);
 	
-	int numJobs = 1;
+	int numJobs = 10;
 
-	int inputs[10];
+	#define num 10
+	int inputs[num];
 	for (int i = 0; i < numJobs; ++i)
 	{
-		inputs[i] = (i + 1) * 10;
+		inputs[i] = (i + 1) * num;
 
 		decls[i].fpFunction = print;
 		decls[i].pName = "print";
@@ -140,21 +135,24 @@ int main()
 	}
 
 	Counter* pCounter0;
-	Counter* pCounter1;
-	Counter* pCounter2;
+	//Counter* pCounter1;
+	//Counter* pCounter2;
 	Counter* pCounter;
 
-	runJobsInThread(decls0, numJobs, &pCounter0, 0);
-	runJobsInThread(decls1, numJobs, &pCounter1, 1);
-	runJobsInThread(decls2, numJobs, &pCounter2, 2);
-	runJobs(decls, numJobs, &pCounter);
+	//runJobsInThread(decls0, numJobs, &pCounter0, 0);
+	//runJobsInThread(decls1, numJobs, &pCounter1, 1);
+	//runJobsInThread(decls2, numJobs, &pCounter2, 2);
+	//runJobs(decls, numJobs, &pCounter);
+
+	runJobsInThread(decls, 2, &pCounter, 1);
+	runJobsInThread(decls, 2, &pCounter0, 2);
 
 	startMainThread();
 
 	waitForCounter(pCounter);
 	waitForCounter(pCounter0);
-	waitForCounter(pCounter1);
-	waitForCounter(pCounter2);
+	//waitForCounter(pCounter1);
+	//waitForCounter(pCounter2);
 
 	printf("All done!\n");
 

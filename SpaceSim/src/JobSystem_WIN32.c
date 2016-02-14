@@ -2,6 +2,7 @@
 #include "JobSystem.h"
 #include <Windows.h>
 #include <assert.h>
+#include <time.h>
 
 #define MAX_NUMBER_PROCESSORS 16
 #define FIBER_STACK_SIZE (1 << 16)
@@ -9,14 +10,8 @@
 #define MAX_COUNTERS 1024
 #define IDLE_SLEEP_TIME 10
 
+//#define DEBUG_OUTPUT
 
-// no seperate queues for local jobs,
-// store thread in fiber as bitpattern
-// and check thread before popping...
-
-// counter needs to be rewritten(counters can be deallocated too soon)...
-
-// rewrite job queue as job list
 
 typedef long atomic;
 
@@ -26,8 +21,8 @@ typedef struct Job
 	void* pParams;
 	char* pName;
 	int threadId;
-Counter* pCounter;
-struct Job* pNextJob;
+	Counter* pCounter;
+	struct Job* pNextJob;
 } Job;
 
 
@@ -96,6 +91,10 @@ static atomic g_globalWaitListLock;
 static Fiber* g_pWaitListHead;
 static Fiber g_pWaitListTail;
 
+#ifdef DEBUG_OUTPUT
+static FILE* g_pDebugLog;
+#endif
+
 
 static void allocCounter(Counter** ppCounter);
 
@@ -162,7 +161,7 @@ void switchFiber(Fiber* pCurrFiber, Fiber* pNewFiber)
 
 	Thread* thread = TlsGetValue(g_threadData);
 	thread->pCurrentFiber = pNewFiber;
-	
+
 	SwitchToFiber(pNewFiber->fiber);
 }
 
@@ -178,6 +177,26 @@ void runNewFiber()
 
 unsigned int __stdcall threadStart(void* threadData)
 {
+#ifdef _DEBUG
+	//set thread debug name
+	struct {
+		DWORD type;
+		LPCSTR pName;
+		DWORD threadID;
+		DWORD flags;
+	} info;
+
+	char name[64];
+	sprintf(name, "thread_%i", ((Thread*)threadData) - g_threads);
+
+	info.type = 0x1000;
+	info.pName = name;
+	info.threadID = -1;
+	info.flags = 0;
+
+	RaiseException(0x406D1388, 0, sizeof(info), (const ULONG_PTR*)&info);
+#endif
+
 	TlsSetValue(g_threadData, threadData);
 
 	ConvertThreadToFiber(0);
@@ -191,7 +210,7 @@ static void pushCounterWaitList(Counter* pCounter)
 	if (pCounter->pWaitListHead == &pCounter->pWaitListZ)
 		return;
 
-	
+
 	for (;;)
 	{
 		Fiber* oldWaitListHead = g_pWaitListHead;
@@ -249,18 +268,25 @@ void __stdcall fiberRoutine(void* args)
 			// iterate list to find next thread compatible job
 			// unlink this job and set the job before that as new tail
 			// if end of list is reached set the tail to the last link
-
-			pJob = pThread->pJobQueueTail->pNextJob;
-			Job* pLastJob = pThread->pJobQueueTail;
-
-			while (pJob != NULL && !(pJob->threadId & pThread->id))
+			Job* pLastJob;
+			for (;;)
 			{
-				pLastJob = pJob;
-				pJob = pJob->pNextJob;
-			}
+				Job* pOldTail = pThread->pJobQueueTail;
+				pJob = pThread->pJobQueueTail->pNextJob;
+				pLastJob = pOldTail;
 
+				while (pJob->pNextJob != NULL && !(pJob->threadId & pThread->id))
+				{
+					pLastJob = pJob;
+					pJob = pJob->pNextJob;
+				}
+
+				if (pOldTail == pThread->pJobQueueTail)
+					break;
+
+			}
 			// no job found
-			if (pJob == NULL)
+			if (pJob->pNextJob == NULL)
 			{
 				Sleep(IDLE_SLEEP_TIME);
 				pThread->pJobQueueTail = pLastJob;
@@ -273,19 +299,28 @@ void __stdcall fiberRoutine(void* args)
 			if (InterlockedCompareExchangePointer(&pLastJob->pNextJob, pJob->pNextJob, pJob) == pJob)
 			{
 				pThread->pJobQueueTail = pLastJob;
+				for (int i = 0; i < g_numProcessors; ++i)
+				{
+					InterlockedCompareExchangePointer(&g_threads[i].pJobQueueTail, pLastJob, pJob);
+				}
+
 				break;
 			}
 
 		}
+
+#ifdef DEBUG_OUTPUT
+		fprintf(g_pDebugLog, "%lld \t new job(%s) started in thread %i. new job tail: %i\n", time(NULL), pJob->pName, pThread - g_threads, pThread->pJobQueueTail - g_jobs);
+#endif
 
 		// execute Job
 		pSelf->pCurrentJob = pJob;
 		pSelf->status = RUNNING;
 
 		pJob->fpFunction(pJob->pParams);
-		
+
 		pSelf->pCurrentJob = NULL;
-		
+
 
 #ifdef _DEBUG
 		pJob->fpFunction = (void(*)(void*))0xFEFEFEFE;
@@ -298,10 +333,10 @@ void __stdcall fiberRoutine(void* args)
 			Job* pOldFreeJob = g_pFreeJob;
 			pJob->pNextJob = g_pFreeJob;
 
-
 			if (InterlockedCompareExchangePointer(&g_pFreeJob, pJob, pOldFreeJob) == pOldFreeJob)
 				break;
 		}
+
 
 		// decrement counter and check wait list
 		if (pCounter != 0 && InterlockedDecrement(&pCounter->counter) == 0)
@@ -310,7 +345,7 @@ void __stdcall fiberRoutine(void* args)
 			if (pCounter->pWaitListHead != &pCounter->pWaitListZ)
 			{
 				pushCounterWaitList(pCounter);
-			} 
+			}
 		}
 
 	}
@@ -321,10 +356,15 @@ void __stdcall fiberRoutine(void* args)
 
 void initJobSystem()
 {
+#ifdef DEBUG_OUTPUT
+	g_pDebugLog = fopen("JS_DEBUG.log", "w");
+#endif 
+
 	//find number of cores
 	SYSTEM_INFO sysInfo = { 0 };
 	GetSystemInfo(&sysInfo);
 	g_numProcessors = sysInfo.dwNumberOfProcessors;
+
 
 	//spawn fibers
 	for (int i = 0; i < NUM_FIBERS; ++i)
@@ -339,13 +379,15 @@ void initJobSystem()
 
 	//init jobs
 
-	for (int i = 1; i < MAX_JOBS; ++i)
+	for (int i = 2; i < MAX_JOBS; ++i)
 	{
 		g_jobs[i - 1].pNextJob = g_jobs + i;
 	}
-	g_pFreeJob = g_jobs;
+	g_pFreeJob = g_jobs + 1;
+	g_pJobQueueHead = g_jobs;
 	g_dummyJob.threadId = 0x0;
-	g_pJobQueueHead = &g_dummyJob;
+	g_dummyJob.pNextJob = g_pJobQueueHead;
+	g_dummyJob.pName = "__dummy";
 
 	//spawn threads
 	g_threadData = TlsAlloc();
@@ -365,12 +407,18 @@ void initJobSystem()
 		g_threads[i].id = 0x1 << i;
 		g_threads[i].pJobQueueTail = &g_dummyJob;
 
+
+
 		//lock thread to specific cpu
 		SetThreadAffinityMask(g_threads[i].handle, 1 << i);
 	}
 	TlsSetValue(g_threadData, g_threads + 0);
 
 	initCounterAllocator();
+
+#ifdef DEBUG_OUTPUT
+	fprintf(g_pDebugLog, "%lld \t jobsystem started\n", time(NULL));
+#endif
 
 }
 
@@ -394,13 +442,24 @@ static void pushJobs(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int th
 	for (int i = 0; i < numJobs; ++i)
 	{
 		Job* pJob;
+		Job* pNewHead;
 		for (;;)
 		{
-			pJob = g_pFreeJob;
+			pNewHead = g_pFreeJob;
 
-			if (InterlockedCompareExchangePointer(&g_pFreeJob, pJob->pNextJob, pJob) == pJob)
+			if (InterlockedCompareExchangePointer(&g_pFreeJob, pNewHead->pNextJob, pNewHead) == pNewHead)
 			{
-				pJob->pNextJob = NULL;
+				pNewHead->pNextJob = NULL;
+				break;
+			}
+		}
+
+
+		for (;;)
+		{
+			pJob = g_pJobQueueHead;
+			if (InterlockedCompareExchangePointer(&g_pJobQueueHead, pNewHead, pJob) == pJob)
+			{
 				break;
 			}
 		}
@@ -410,20 +469,16 @@ static void pushJobs(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int th
 		pJob->pName = pJobDcls[i].pName;
 		pJob->threadId = threadMask;
 		pJob->pCounter = ppCounter == 0 ? 0 : *ppCounter;
-		
+		MemoryBarrier();
+		pJob->pNextJob = pNewHead;
 
-		Job* pOldHead;
-
-		for (;;)
-		{
-			pOldHead = g_pJobQueueHead;
-			if (InterlockedCompareExchangePointer(&g_pJobQueueHead, pJob, pOldHead) == pOldHead)
-			{
-				pOldHead->pNextJob = g_pJobQueueHead;
-				break;
-			}
-		}
 	}
+
+#ifdef DEBUG_OUTPUT
+	fprintf(g_pDebugLog, "%lld \t %i new jobs added (%s %x) \n\t\t new job head: %i\n", time(NULL), numJobs, pJobDcls->pName, threadMask, g_pJobQueueHead - g_jobs);
+#endif
+
+
 }
 
 void runJobs(JobDecl* pJobDecls, int numJobs, Counter** ppCounter)
@@ -433,7 +488,7 @@ void runJobs(JobDecl* pJobDecls, int numJobs, Counter** ppCounter)
 
 void runJobsInThread(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int threadId)
 {
-	assert(threadId < g_numProcessors);
+	//assert(threadId < g_numProcessors);
 	pushJobs(pJobDcls, numJobs, ppCounter, 0x1 << threadId);
 }
 
@@ -461,7 +516,7 @@ void waitForCounter(Counter* pCounter)
 		Fiber* pOldWaitListHead = pCounter->pWaitListHead;
 		if (InterlockedCompareExchangePointer(&pCounter->pWaitListHead, pSelf, pOldWaitListHead) == pOldWaitListHead)
 		{
-			pOldWaitListHead->pNextInWaitList= pSelf;
+			pOldWaitListHead->pNextInWaitList = pSelf;
 			break;
 		}
 	}
@@ -486,7 +541,10 @@ void printJobSystemDebug(FILE* pFile)
 	}
 }
 
-
+int numJobSystemThreads()
+{
+	return g_numProcessors;
+}
 
 
 #endif

@@ -30,4 +30,6 @@ void waitForCounter(Counter* pCounter);
 
 void printJobSystemDebug(FILE* pFile);
 
+int numJobSystemThreads();
+
 #endif
