@@ -2,6 +2,7 @@
 #define JOB_SYSTEM_H
 
 #include <stdio.h>
+#include "defines.h"
 
 #define NUM_FIBERS 160
 #define MAIN_THREAD 0
@@ -18,18 +19,20 @@ typedef struct JobDecl
 
 typedef struct Counter Counter;
 
-void initJobSystem();
-void shutDownJobSystem();
+void jsInit();
+void jsShutDown();
 
-void startMainThread();
+void jsStartMainThread();
 
-void runJobs(JobDecl* pJobs, int numJobs, Counter** ppCounter);
-void runJobsInThread(JobDecl* pJobs, int numJobs, Counter** ppCounter, int threadId);
-void deleteCounter(Counter* pCounter);
-void waitForCounter(Counter* pCounter);
+void jsRunJobs(JobDecl* pJobs, int numJobs, Counter** ppCounter);
+void jsRunJobsInThread(JobDecl* pJobs, int numJobs, Counter** ppCounter, int threadId);
+void jsDeleteCounter(Counter* pCounter);
+void jsWaitForCounter(Counter* pCounter);
+// returns actual waited time
+uint32 jsWait(uint32 ms);
 
-void printJobSystemDebug(FILE* pFile);
+void jsPrintDebug(FILE* pFile);
 
-int numJobSystemThreads();
+int jsNumThreads();
 
 #endif

@@ -34,8 +34,9 @@ void debugJobSystem(void* in)
 
 	for (;;)
 	{
-		printJobSystemDebug(file);
-		Sleep(16);
+		jsPrintDebug(file);
+		uint32 dt = jsWait(100);
+		printf("WAIT_TIME: %d\n", dt);
 	}
 	fclose(file);
 }
@@ -47,7 +48,7 @@ void print0(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("thread0: %i(%i)\n", i, num);
+		//printf("thread0: %i(%i)\n", i, num);
 		Sleep(10);
 	}
 }
@@ -60,7 +61,7 @@ void print1(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("thread1: %i(%i)\n", i, num);
+		//printf("thread1: %i(%i)\n", i, num);
 		Sleep(10);
 	}
 }
@@ -73,7 +74,7 @@ void print2(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("thread2: %i(%i)\n", i, num);
+		//printf("thread2: %i(%i)\n", i, num);
 		Sleep(10);
 	}
 }
@@ -85,7 +86,7 @@ void print(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("%i(%i)\n", i, num);
+		//printf("%i(%i)\n", i, num);
 		Sleep(10);
 	}
 }
@@ -95,7 +96,7 @@ int main()
 {
 
 
-	initJobSystem();
+	jsInit();
 
 	JobDecl decls0[10];
 	JobDecl decls1[10];
@@ -107,7 +108,7 @@ int main()
 	debug.pName = "debug";
 	debug.pParams = 0;
 
-	//runJobsInThread(&debug, 1, 0, numJobSystemThreads()-1);
+	jsRunJobsInThread(&debug, 1, 0, jsNumThreads()-1);
 	
 	int numJobs = 10;
 
@@ -135,24 +136,23 @@ int main()
 	}
 
 	Counter* pCounter0;
-	//Counter* pCounter1;
-	//Counter* pCounter2;
+	Counter* pCounter1;
+	Counter* pCounter2;
 	Counter* pCounter;
 
-	//runJobsInThread(decls0, numJobs, &pCounter0, 0);
-	//runJobsInThread(decls1, numJobs, &pCounter1, 1);
-	//runJobsInThread(decls2, numJobs, &pCounter2, 2);
-	//runJobs(decls, numJobs, &pCounter);
+	
+	jsRunJobsInThread(decls0, numJobs, &pCounter0, 0);
+	jsRunJobsInThread(decls1, numJobs, &pCounter1, 1);
+	jsRunJobsInThread(decls2, numJobs, &pCounter2, 2);
+	jsRunJobs(decls, numJobs, &pCounter);
 
-	runJobsInThread(decls, 2, &pCounter, 1);
-	runJobsInThread(decls, 2, &pCounter0, 2);
+	
+	jsStartMainThread();
 
-	startMainThread();
-
-	waitForCounter(pCounter);
-	waitForCounter(pCounter0);
-	//waitForCounter(pCounter1);
-	//waitForCounter(pCounter2);
+	jsWaitForCounter(pCounter);
+	jsWaitForCounter(pCounter0);
+	jsWaitForCounter(pCounter1);
+	jsWaitForCounter(pCounter2);
 
 	printf("All done!\n");
 
@@ -162,7 +162,7 @@ int main()
 	job.fpFunction = mainJob;
 	job.pParams = 0;
 
-	runJobs(&job, 1, 0);
+	jsRunJobs(&job, 1, 0);
 	
 
 	return 0;

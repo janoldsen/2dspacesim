@@ -9,6 +9,7 @@
 #define MAX_JOBS 1024
 #define MAX_COUNTERS 1024
 #define IDLE_SLEEP_TIME 10
+#define MAX_WAITING_FIBERS 64
 
 //#define DEBUG_OUTPUT
 
@@ -87,9 +88,22 @@ static Job* g_pJobQueueHead;
 static Counter* g_pNextCounter;
 static Counter g_counters[MAX_COUNTERS];
 
-static atomic g_globalWaitListLock;
-static Fiber* g_pWaitListHead;
-static Fiber g_pWaitListTail;
+static atomic g_globalWaitCounterListLock;
+static Fiber* g_pWaitCounterListHead;
+static Fiber g_pWaitCounterListTail;
+
+typedef struct WaitingFiber
+{
+	uint64 time;
+	Fiber* pFiber;
+	struct WaitingFiber* pNextWaitingFiber;
+} WaitingFiber;
+
+static uint64 g_PerformanceFrequency;
+static WaitingFiber g_WaitingFibers[MAX_WAITING_FIBERS];
+static atomic g_WaitingFiberHead;
+static WaitingFiber* g_pWaitListHead;
+static WaitingFiber g_WaitListTail;
 
 #ifdef DEBUG_OUTPUT
 static FILE* g_pDebugLog;
@@ -99,7 +113,7 @@ static FILE* g_pDebugLog;
 static void allocCounter(Counter** ppCounter);
 
 
-void initCounterAllocator()
+static void initCounterAllocator()
 {
 	Counter* pIter = g_counters + MAX_COUNTERS;
 	Counter* pPrev = NULL;
@@ -113,7 +127,7 @@ void initCounterAllocator()
 	g_pNextCounter = pPrev;
 }
 
-void allocCounter(Counter** ppCounter)
+static void allocCounter(Counter** ppCounter)
 {
 	assert("ppCounter allocation size to small!" && g_pNextCounter != NULL);
 
@@ -147,7 +161,7 @@ void freeCounter(Counter* counter)
 }
 
 
-void switchFiber(Fiber* pCurrFiber, Fiber* pNewFiber)
+static void switchFiber(Fiber* pCurrFiber, Fiber* pNewFiber)
 {
 	pCurrFiber->status = FREE;
 	pNewFiber->status = RUNNING;
@@ -165,7 +179,7 @@ void switchFiber(Fiber* pCurrFiber, Fiber* pNewFiber)
 	SwitchToFiber(pNewFiber->fiber);
 }
 
-void runNewFiber()
+static void runNewFiber()
 {
 	Fiber* fiber = g_pFiberPool[InterlockedDecrement(&g_fiberPoolHead) + 1];
 	fiber->status = RUNNING;
@@ -213,9 +227,9 @@ static void pushCounterWaitList(Counter* pCounter)
 
 	for (;;)
 	{
-		Fiber* oldWaitListHead = g_pWaitListHead;
+		Fiber* oldWaitListHead = g_pWaitCounterListHead;
 		//pLastInWaitList->pNextInWaitList = oldWaitList;
-		if (InterlockedCompareExchangePointer(&g_pWaitListHead, pCounter->pWaitListHead, oldWaitListHead) == oldWaitListHead)
+		if (InterlockedCompareExchangePointer(&g_pWaitCounterListHead, pCounter->pWaitListHead, oldWaitListHead) == oldWaitListHead)
 		{
 			oldWaitListHead->pNextInWaitList = pCounter->pWaitListZ.pNextInWaitList;
 			break;
@@ -233,11 +247,34 @@ void __stdcall fiberRoutine(void* args)
 	while (1)
 	{
 		Thread* pThread = TlsGetValue(g_threadData);
-		//check waitlist
+
+		//check timer waitlist
 		for (;;)
 		{
-			Fiber* pFiber = g_pWaitListTail.pNextInWaitList;
-			Fiber* pLastFiber = &g_pWaitListTail;
+			WaitingFiber* pWaitingFiber = g_WaitListTail.pNextWaitingFiber;
+
+			uint64 perfCounter;
+			QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter);
+			if (pWaitingFiber != NULL && perfCounter > pWaitingFiber->time)
+			{
+				if (InterlockedCompareExchangePointer(&g_WaitListTail.pNextWaitingFiber, pWaitingFiber->pNextWaitingFiber, pWaitingFiber) == pWaitingFiber)
+				{
+					switchFiber(pSelf, pWaitingFiber->pFiber);
+				}
+			}
+			else
+			{
+				break;
+			}
+
+		}
+
+
+		//check counter waitlist
+		for (;;)
+		{
+			Fiber* pFiber = g_pWaitCounterListTail.pNextInWaitList;
+			Fiber* pLastFiber = &g_pWaitCounterListTail;
 
 			while (pFiber != NULL && !(pFiber->pCurrentJob->threadId & pThread->id))
 			{
@@ -280,7 +317,7 @@ void __stdcall fiberRoutine(void* args)
 					pLastJob = pJob;
 					pJob = pJob->pNextJob;
 				}
-
+				
 				if (pOldTail == pThread->pJobQueueTail)
 					break;
 
@@ -299,11 +336,6 @@ void __stdcall fiberRoutine(void* args)
 			if (InterlockedCompareExchangePointer(&pLastJob->pNextJob, pJob->pNextJob, pJob) == pJob)
 			{
 				pThread->pJobQueueTail = pLastJob;
-				for (int i = 0; i < g_numProcessors; ++i)
-				{
-					InterlockedCompareExchangePointer(&g_threads[i].pJobQueueTail, pLastJob, pJob);
-				}
-
 				break;
 			}
 
@@ -354,7 +386,7 @@ void __stdcall fiberRoutine(void* args)
 
 
 
-void initJobSystem()
+void jsInit()
 {
 #ifdef DEBUG_OUTPUT
 	g_pDebugLog = fopen("JS_DEBUG.log", "w");
@@ -376,9 +408,17 @@ void initJobSystem()
 	}
 
 
+	//init waiting fibers
+	memset(g_WaitingFibers, 0, sizeof(g_WaitingFibers));
+	g_WaitingFiberHead = 0;
+	g_WaitListTail.pFiber = NULL;
+	g_WaitListTail.pNextWaitingFiber = NULL;
+	g_WaitListTail.time = 0;
+	
+	//get performance frequency
+	QueryPerformanceFrequency((LARGE_INTEGER*)&g_PerformanceFrequency);
 
 	//init jobs
-
 	for (int i = 2; i < MAX_JOBS; ++i)
 	{
 		g_jobs[i - 1].pNextJob = g_jobs + i;
@@ -422,7 +462,7 @@ void initJobSystem()
 
 }
 
-void startMainThread()
+void jsStartMainThread()
 {
 	threadStart(g_threads + 0);
 }
@@ -481,18 +521,18 @@ static void pushJobs(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int th
 
 }
 
-void runJobs(JobDecl* pJobDecls, int numJobs, Counter** ppCounter)
+void jsRunJobs(JobDecl* pJobDecls, int numJobs, Counter** ppCounter)
 {
 	pushJobs(pJobDecls, numJobs, ppCounter, ~0x0);
 }
 
-void runJobsInThread(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int threadId)
+void jsRunJobsInThread(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int threadId)
 {
 	//assert(threadId < g_numProcessors);
 	pushJobs(pJobDcls, numJobs, ppCounter, 0x1 << threadId);
 }
 
-void deleteCounter(Counter* pCounter)
+void jsDeleteCounter(Counter* pCounter)
 {
 	// push remaining wait list into global
 	pushCounterWaitList(pCounter);
@@ -500,7 +540,7 @@ void deleteCounter(Counter* pCounter)
 	freeCounter(pCounter);
 }
 
-void waitForCounter(Counter* pCounter)
+void jsWaitForCounter(Counter* pCounter)
 {
 	// counter already zero
 	if (pCounter->counter == 0)
@@ -509,7 +549,6 @@ void waitForCounter(Counter* pCounter)
 	Fiber* pSelf = GetFiberData();
 
 	// push fiber in wait queue
-	//lock
 	pSelf->pNextInWaitList = NULL;
 	for (;;)
 	{
@@ -526,8 +565,64 @@ void waitForCounter(Counter* pCounter)
 	runNewFiber();
 }
 
+uint32 jsWait(uint32 ms)
+{
 
-void printJobSystemDebug(FILE* pFile)
+	Fiber* pSelf = GetFiberData();
+	WaitingFiber* pWaitingFiber;
+	for (;;)
+	{
+		int oldWaitingFiberHead = g_WaitingFiberHead;
+		int waitingFiberHead = g_WaitingFiberHead;
+
+		do
+		{
+			waitingFiberHead = (waitingFiberHead + 1) % MAX_WAITING_FIBERS;
+		} while (g_WaitingFibers[waitingFiberHead].pFiber != NULL);
+
+		if (InterlockedCompareExchange(&g_WaitingFiberHead, waitingFiberHead, oldWaitingFiberHead) == oldWaitingFiberHead)
+		{
+			pWaitingFiber = g_WaitingFibers + waitingFiberHead;
+			break;
+		}
+	}
+
+	pWaitingFiber->pFiber = pSelf;
+
+	uint64 perfCounter;
+	QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter);
+	pWaitingFiber->time = perfCounter + ms*(g_PerformanceFrequency / 1000);
+
+	//sort into waiting list
+	for (;;)
+	{
+		WaitingFiber* pLastFiber = &g_WaitListTail;
+		WaitingFiber* pNextWaitingFiber = g_WaitListTail.pNextWaitingFiber;
+
+		while (pNextWaitingFiber != NULL && pNextWaitingFiber->time < pWaitingFiber->time)
+		{
+			pLastFiber = pNextWaitingFiber;
+			pNextWaitingFiber = pNextWaitingFiber->pNextWaitingFiber;
+		}
+
+		pWaitingFiber->pNextWaitingFiber = pNextWaitingFiber;
+
+		if (InterlockedCompareExchangePointer(&pLastFiber->pNextWaitingFiber, pWaitingFiber, pNextWaitingFiber) == pNextWaitingFiber)
+		{
+			break;
+		}
+	}
+
+	pSelf->status = WAITING;
+	runNewFiber();
+
+	QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter);
+	uint64 elapsedTime = (perfCounter - pWaitingFiber->time)*1000 / g_PerformanceFrequency;
+	pWaitingFiber->pFiber = NULL;
+	return (uint32)elapsedTime;
+}
+
+void jsPrintDebug(FILE* pFile)
 {
 	for (int i = 0; i < g_numProcessors; ++i)
 	{
@@ -541,7 +636,7 @@ void printJobSystemDebug(FILE* pFile)
 	}
 }
 
-int numJobSystemThreads()
+int jsNumThreads()
 {
 	return g_numProcessors;
 }
