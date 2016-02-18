@@ -35,7 +35,7 @@ void debugJobSystem(void* in)
 	for (;;)
 	{
 		jsPrintDebug(file);
-		uint32 dt = jsWait(100);
+		uint32 dt = jsWait(1000);
 		printf("WAIT_TIME: %d\n", dt);
 	}
 	fclose(file);
@@ -48,7 +48,7 @@ void print0(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("thread0: %i(%i)\n", i, num);
+		//printf("thread0: %i(%i)\n", i, num);
 		Sleep(10);
 	}
 }
@@ -61,7 +61,7 @@ void print1(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("thread1: %i(%i)\n", i, num);
+		//printf("thread1: %i(%i)\n", i, num);
 		Sleep(10);
 	}
 }
@@ -74,7 +74,7 @@ void print2(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("thread2: %i(%i)\n", i, num);
+		//printf("thread2: %i(%i)\n", i, num);
 		Sleep(10);
 	}
 }
@@ -86,7 +86,7 @@ void print(void* pIn)
 
 	for (int i = 0; i < num; ++i)
 	{
-		printf("%i(%i)\n", i, num);
+		//printf("%i(%i)\n", i, num);
 		Sleep(10);
 	}
 }

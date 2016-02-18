@@ -617,9 +617,9 @@ uint32 jsWait(uint32 ms)
 
 	pSelf->status = WAITING;
 	runNewFiber();
-
-	QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter);
-	uint64 elapsedTime = (perfCounter - pWaitingFiber->time) * 1000 / g_PerformanceFrequency;
+	uint64 perfCounter2;
+	QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter2);
+	uint64 elapsedTime = (perfCounter2 - perfCounter) * 1000 / g_PerformanceFrequency;
 	pWaitingFiber->pFiber = NULL;
 	return (uint32)elapsedTime;
 }
