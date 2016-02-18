@@ -6,7 +6,7 @@
 
 #define MAX_NUMBER_PROCESSORS 16
 #define FIBER_STACK_SIZE (1 << 16)
-#define MAX_JOBS 1024
+#define MAX_JOBS 64
 #define MAX_COUNTERS 1024
 #define IDLE_SLEEP_TIME 10
 #define MAX_WAITING_FIBERS 64
@@ -49,7 +49,7 @@ typedef struct
 {
 	HANDLE handle;
 	int id;
-	Job* pJobQueueTail;
+	Job** ppJobQueueTail;
 	Fiber* pCurrentFiber;
 } Thread;
 
@@ -242,12 +242,12 @@ void __stdcall fiberRoutine(void* args)
 {
 
 	Fiber* pSelf = args;
-
-
+	
 	while (1)
 	{
 		Thread* pThread = TlsGetValue(g_threadData);
 
+	FIBER_CHECK:
 		//check timer waitlist
 		for (;;)
 		{
@@ -305,37 +305,40 @@ void __stdcall fiberRoutine(void* args)
 			// iterate list to find next thread compatible job
 			// unlink this job and set the job before that as new tail
 			// if end of list is reached set the tail to the last link
-			Job* pLastJob;
-			for (;;)
+			Job** ppJobLink = pThread->ppJobQueueTail;
+
+			pJob = *pThread->ppJobQueueTail;
+
+			while (pJob->pNextJob != NULL && !(pJob->threadId & pThread->id))
 			{
-				Job* pOldTail = pThread->pJobQueueTail;
-				pJob = pThread->pJobQueueTail->pNextJob;
-				pLastJob = pOldTail;
-
-				while (pJob->pNextJob != NULL && !(pJob->threadId & pThread->id))
-				{
-					pLastJob = pJob;
-					pJob = pJob->pNextJob;
-				}
-				
-				if (pOldTail == pThread->pJobQueueTail)
-					break;
-
+				ppJobLink = &(pJob->pNextJob);
+				pJob = *ppJobLink;
 			}
+
+
 			// no job found
 			if (pJob->pNextJob == NULL)
 			{
+				pThread->ppJobQueueTail = ppJobLink;
 				Sleep(IDLE_SLEEP_TIME);
-				pThread->pJobQueueTail = pLastJob;
-				continue;
+				goto FIBER_CHECK;
 			}
 
 			assert(pJob->fpFunction != (void(*)(void*))0xFEFEFEFE);
 
+
+
 			// unlink job
-			if (InterlockedCompareExchangePointer(&pLastJob->pNextJob, pJob->pNextJob, pJob) == pJob)
+			if (InterlockedCompareExchangePointer(ppJobLink, pJob->pNextJob, pJob) == pJob)
 			{
-				pThread->pJobQueueTail = pLastJob;
+				for (int i = 0; i < g_numProcessors; ++i)
+				{
+					InterlockedCompareExchangePointer((void**)&g_threads[i].ppJobQueueTail, (void*)ppJobLink, (void*)&pJob->pNextJob);
+				}
+#ifdef _DEBUG
+				pJob->pNextJob = (Job*)0xBAD;
+#endif
+				pThread->ppJobQueueTail = ppJobLink;
 				break;
 			}
 
@@ -414,7 +417,7 @@ void jsInit()
 	g_WaitListTail.pFiber = NULL;
 	g_WaitListTail.pNextWaitingFiber = NULL;
 	g_WaitListTail.time = 0;
-	
+
 	//get performance frequency
 	QueryPerformanceFrequency((LARGE_INTEGER*)&g_PerformanceFrequency);
 
@@ -445,7 +448,7 @@ void jsInit()
 		}
 
 		g_threads[i].id = 0x1 << i;
-		g_threads[i].pJobQueueTail = &g_dummyJob;
+		g_threads[i].ppJobQueueTail = &(g_dummyJob.pNextJob);
 
 
 
@@ -511,7 +514,6 @@ static void pushJobs(JobDecl* pJobDcls, int numJobs, Counter** ppCounter, int th
 		pJob->pCounter = ppCounter == 0 ? 0 : *ppCounter;
 		MemoryBarrier();
 		pJob->pNextJob = pNewHead;
-
 	}
 
 #ifdef DEBUG_OUTPUT
@@ -617,7 +619,7 @@ uint32 jsWait(uint32 ms)
 	runNewFiber();
 
 	QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter);
-	uint64 elapsedTime = (perfCounter - pWaitingFiber->time)*1000 / g_PerformanceFrequency;
+	uint64 elapsedTime = (perfCounter - pWaitingFiber->time) * 1000 / g_PerformanceFrequency;
 	pWaitingFiber->pFiber = NULL;
 	return (uint32)elapsedTime;
 }
