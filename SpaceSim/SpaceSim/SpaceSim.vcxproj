@@ -21,14 +21,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\atomic_WIN32.cpp" />
     <ClCompile Include="..\src\FileSystem_WIN32.c" />
     <ClCompile Include="..\src\Game.c" />
     <ClCompile Include="..\src\Graphics_Extension_WIN32.c" />
@@ -98,10 +99,13 @@
     <ClCompile Include="..\src\main.c" />
     <ClCompile Include="..\src\Memory_WIN32.cpp" />
     <ClCompile Include="..\src\Physics.c" />
+    <ClCompile Include="..\src\ThreadSafety.cpp" />
+    <ClCompile Include="..\src\Time_WIN32.cpp" />
     <ClCompile Include="..\src\Window_WIN32.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\bin\data\shader\ShaderDefinitions.h" />
+    <ClInclude Include="..\src\atomic.h" />
     <ClInclude Include="..\src\defines.h" />
     <ClInclude Include="..\src\FileSystem.h" />
     <ClInclude Include="..\src\Game.h" />
@@ -111,6 +115,8 @@
     <ClInclude Include="..\src\Math.h" />
     <ClInclude Include="..\src\Memory.h" />
     <ClInclude Include="..\src\Physics.h" />
+    <ClInclude Include="..\src\ThreadSafety.h" />
+    <ClInclude Include="..\src\Time.h" />
     <ClInclude Include="..\src\Window.h" />
   </ItemGroup>
   <ItemGroup>

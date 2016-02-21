@@ -1,12 +1,14 @@
 #ifdef _WIN32
 #include "Graphics.h"
+#include "FileSystem.h"
+#include "JobSystem.h"
 #include <Windows.h>
 #include <gl\GL.h>
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
 #include "../bin/data/shader/ShaderDefinitions.h"
-
+#include "Math.h"
 #include "Graphics_Extension_WIN32.c"
 
 #define VERSION_DIRECTIVE "#version 430 core\n"
@@ -15,7 +17,6 @@
 static GLuint g_program;
 static GLuint g_transformBuffer;
 
-#include "Math.h"
 
 
 static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint id, GLenum _severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -31,9 +32,9 @@ static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint i
 	case GL_DEBUG_SOURCE_APPLICATION: source = "app"; break;
 	default: source = "other";
 	}
-		
 
-	
+
+
 	char* type;
 	switch (_type)
 	{
@@ -56,7 +57,7 @@ static void APIENTRY debugMessageCallback(GLenum _source, GLenum _type, GLuint i
 	case GL_DEBUG_SEVERITY_NOTIFICATION: severity = "NOTIFICATION"; break;
 	default: severity = "";
 	}
-		
+
 
 
 
@@ -75,7 +76,7 @@ static GLuint compileShader(GLenum type, char* src, char* header)
 		char* srcs[] = { VERSION_DIRECTIVE, header, LINE_DIRECTIVE, src };
 		glShaderSource(shader, 4, srcs, NULL);
 	}
-		
+
 	glCompileShader(shader);
 
 	int isCompiled;
@@ -87,15 +88,16 @@ static GLuint compileShader(GLenum type, char* src, char* header)
 		glGetShaderInfoLog(shader, 512, NULL, error);
 
 		printf("Shader Error: %s", error);
-		glDeleteShader(shader); 
+		glDeleteShader(shader);
 
 		assert("shaderCompilationFailed" && 0);
 	}
 
-	
+
 
 	return shader;
 }
+
 
 
 static void packDestruction(int* unpacked, unsigned int* packed)
@@ -122,7 +124,7 @@ static void packColors(int* unpacked, unsigned int* packed)
 			int packedIdx = totalShift / 32;
 			int shift = totalShift % 32;
 
-			
+
 			packed[packedIdx] |= (unpacked[unpackedIdx] << shift);
 
 			if (shift >= 30)
@@ -143,10 +145,10 @@ static void unPackColors(unsigned int* packed, int* unpacked)
 			int shift = totalShift % 32;
 
 
-			unpacked[unpackedIdx] |= (packed[packedIdx] >> shift) & (1 << 3)-1;
+			unpacked[unpackedIdx] |= (packed[packedIdx] >> shift) & (1 << 3) - 1;
 
 			if (shift >= 30)
-				unpacked[unpackedIdx] |= (packed[packedIdx+1] & (1 << (shift-32 + 3))-1) << (32 - shift);
+				unpacked[unpackedIdx] |= (packed[packedIdx + 1] & (1 << (shift - 32 + 3)) - 1) << (32 - shift);
 		}
 	}
 }
@@ -180,7 +182,7 @@ void setUpShips()
 
 	unsigned int _destruction[2][2] = { 0,0 };
 
-	for (int i = 0; i < 2;++i)
+	for (int i = 0; i < 2; ++i)
 		packDestruction(destruction[i], _destruction[i]);
 
 
@@ -334,7 +336,7 @@ void setUpShips()
 		int colorIdx;
 	} staticData[2][size*size] = { 0 };
 	int destructionIdx[2][size*size] = { 0 };
-	
+
 	for (int k = 0; k < 2; ++k)
 	{
 		for (int j = 0; j < size; ++j)
@@ -342,27 +344,27 @@ void setUpShips()
 			for (int i = 0; i < size; ++i)
 			{
 				int color = 8;
-				if (i == 0 && j == (size-1))
+				if (i == 0 && j == (size - 1))
 					color = 0;
 				else if (i == 0 && j == 0)
 					color = 1;
-				else if (i == (size-1) && j == 0)
+				else if (i == (size - 1) && j == 0)
 					color = 2;
-				else if (i == (size-1) && j == (size-1))
+				else if (i == (size - 1) && j == (size - 1))
 					color = 3;
 				else if (i == 0)
 					color = 4;
-				else if (i == (size-1))
+				else if (i == (size - 1))
 					color = 5;
-				else if (j == (size-1))
+				else if (j == (size - 1))
 					color = 6;
 				else if (j == 0)
 					color = 7;
 				else
 					destructionIdx[k][j * size + i] = 1;
 
-				staticData[k][j * size + i].pos[0] = i - size/2;
-				staticData[k][j * size + i].pos[1] = j - size/2;
+				staticData[k][j * size + i].pos[0] = i - size / 2;
+				staticData[k][j * size + i].pos[1] = j - size / 2;
 				staticData[k][j * size + i].shipIdx = k;
 				staticData[k][j * size + i].colorIdx = color;
 			}
@@ -376,13 +378,13 @@ void setUpShips()
 
 	GLuint staticBuffer = buffers[0];
 	GLuint destructionBuffer = buffers[1];
-	
+
 	//fill buffers
 	glBindBuffer(GL_ARRAY_BUFFER, staticBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(staticData), &staticData, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, destructionBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(destructionIdx), &destructionIdx, GL_DYNAMIC_DRAW);
-	
+
 	//set up attribs
 	int offsets[] = { 0,0 };
 	size_t strides[] = { sizeof(struct StaticData), sizeof(int) };
@@ -390,11 +392,11 @@ void setUpShips()
 
 	glVertexBindingDivisor(0, 1);
 	glVertexBindingDivisor(1, 1);
-	
+
 	glVertexAttribIFormat(POS_ATTRIB_LOC, 2, GL_INT, offsetof(struct StaticData, pos));
 	glVertexAttribIFormat(SHIP_IDX_ATTRIB_LOC, 1, GL_INT, offsetof(struct StaticData, shipIdx));
 	glVertexAttribIFormat(COLOR_IDX_ATTRIB_LOC, 1, GL_INT, offsetof(struct StaticData, colorIdx));
-	glVertexAttribIFormat(DESTRUCTION_IDX_ATTRIB_LOC, 1, GL_INT,0);
+	glVertexAttribIFormat(DESTRUCTION_IDX_ATTRIB_LOC, 1, GL_INT, 0);
 
 	glVertexAttribBinding(POS_ATTRIB_LOC, 0);
 	glVertexAttribBinding(SHIP_IDX_ATTRIB_LOC, 0);
@@ -408,7 +410,7 @@ void setUpShips()
 
 
 
-	
+
 
 	// set up destruction
 	{
@@ -449,7 +451,7 @@ void setUpShips()
 
 	// set up ship transforms
 	{
-		
+
 		GLuint shipTransforms;
 		glGenBuffers(1, &shipTransforms);
 		glBindBuffer(GL_UNIFORM_BUFFER, shipTransforms);
@@ -528,24 +530,28 @@ void initGraphics(int width, int height, WindowHandle window)
 	glViewport(0, 0, width, height);
 
 
-	char header[2048] = { 0};
+	char header[2048] = { 0 };
 
-	FILE* file = fopen("data/shader/shaderDefinitions.h", "r");
-	fread(header, sizeof(char), sizeof(header), file);
-	fclose(file);
-
+	File* pFile;
+	pFile = fsCreate("data/shader/shaderDefinitions.h", NULL);
+	fsOpenRead(pFile);
+	fsRead(pFile, header, sizeof(header));
+	fsClose(pFile);
 
 	char src[2048] = { 0 };
-	file = fopen("data/shader/test.vs", "r");
-	fread(src, sizeof(char), sizeof(src), file);
-	fclose(file);
-	
+	pFile = fsCreate("data/shader/test.vs", NULL);
+	fsOpenRead(pFile);
+	fsRead(pFile, src, sizeof(src));
+	fsClose(pFile);
+
 	GLuint vs = compileShader(GL_VERTEX_SHADER, src, header);
 
-	file = fopen("data/shader/test.fs", "r");
+	pFile = fsCreate("data/shader/test.fs", NULL);
 	memset(src, 0, sizeof(src));
-	fread(src, sizeof(char), sizeof(src), file);
-	fclose(file);
+	fsOpenRead(pFile);
+	fsRead(pFile, src, sizeof(src));
+	fsClose(pFile);
+
 
 	GLuint fs = compileShader(GL_FRAGMENT_SHADER, src, header);
 
@@ -570,15 +576,12 @@ void initGraphics(int width, int height, WindowHandle window)
 	}
 
 
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
 	GLint test = glGetUniformLocation(g_program, "screensize");
 
 	GLuint vertexArrayObject;
 	glGenVertexArrays(1, &vertexArrayObject);
 	glBindVertexArray(vertexArrayObject);
-	
+
 	glUseProgram(g_program);
 
 	setUpShips();
@@ -593,7 +596,7 @@ void initGraphics(int width, int height, WindowHandle window)
 
 
 
-void render()
+void render(double dt)
 {
 	float color[] = { 0.3f, 0.0f, 0.0f, 1.0f };
 	float one = 1.0f;
@@ -602,7 +605,7 @@ void render()
 
 	static float angle = 0.0f;
 
-	angle += 0.01f;
+	angle += (float)(0.1 * dt);
 	glBindBuffer(GL_UNIFORM_BUFFER, g_transformBuffer);
 	float* transform = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
 	transform[0] = cosf(angle);
@@ -615,13 +618,13 @@ void render()
 	transform[16] = sinf(-angle);
 	transform[17] = cosf(-angle);
 
-	
+
 	glUnmapBuffer(GL_UNIFORM_BUFFER);
 	//glBindBufferBase(GL_UNIFORM_BUFFER, TRANSFORM_UNI_BINDING, g_transformBuffer);
 
 	//glUseProgram(g_program);
 
-	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, size*size*2);
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, size*size * 2);
 
 }
 

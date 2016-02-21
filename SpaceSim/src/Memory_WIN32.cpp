@@ -4,7 +4,7 @@
 
 void* allocPages(int numPages)
 {
-	return VirtualAlloc(NULL, 4096 * numPages, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+	return VirtualAlloc(NULL, PAGE_SIZE * numPages, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 }
 
 void freePages(void* pages)

@@ -28,7 +28,7 @@ WindowHandle createWindow(int width, int height)
 	wndClass.style = CS_OWNDC;
 	wndClass.lpfnWndProc = wndProc;
 	wndClass.hInstance = currentInstance;
-	wndClass.lpszClassName = L"main";
+	wndClass.lpszClassName = "main";
 		
 	RegisterClassEx(&wndClass);
 
@@ -37,8 +37,8 @@ WindowHandle createWindow(int width, int height)
 
 	HWND window = CreateWindowEx(
 		WS_EX_APPWINDOW | WS_EX_WINDOWEDGE,
-		L"main",
-		L"SpaceSim",
+		"main",
+		"SpaceSim",
 		WS_CAPTION | WS_SYSMENU, //style
 		CW_USEDEFAULT, //posX
 		CW_USEDEFAULT, //posY

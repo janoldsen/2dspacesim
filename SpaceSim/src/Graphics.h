@@ -4,7 +4,7 @@
 #include "Window.h"
 
 void initGraphics(int width, int height, WindowHandle window);
-void render();
+void render(double dt);
 void present(WindowHandle window);
 
 
