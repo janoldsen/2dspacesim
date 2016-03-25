@@ -6,6 +6,7 @@
 
 #define NUM_FIBERS 160
 #define MAIN_THREAD 0
+#define MAX_NUMBER_THREADS 16
 
 #define JOB_ENTRY(name) void name(void* pIn)
 
@@ -30,6 +31,8 @@ void jsDeleteCounter(Counter* pCounter);
 void jsWaitForCounter(Counter* pCounter);
 // returns actual waited time
 uint32 jsWait(uint32 ms);
+
+int jsGetCurrentThread();
 
 void jsPrintDebug(FILE* pFile);
 

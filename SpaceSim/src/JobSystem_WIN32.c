@@ -644,4 +644,10 @@ int jsNumThreads()
 }
 
 
+int jsGetCurrentThread()
+{
+	Thread* pThread = TlsGetValue(g_threadData);
+	return pThread - g_threads;
+}
+
 #endif
