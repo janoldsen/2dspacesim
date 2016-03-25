@@ -59,6 +59,7 @@ int main()
 	JobDecl job;
 	job.fpFunction = mainJob;
 	job.pParams = 0;
+	job.pName = "mainJob";
 
 	jsRunJobsInThread(&job, 1, 0, MAIN_THREAD);
 	

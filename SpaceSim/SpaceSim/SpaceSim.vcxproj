@@ -60,12 +60,14 @@
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;APPLICATION;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsC</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(VK_SDK_PATH)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(ProjectDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>$(VK_SDK_PATH)\bin32\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,29 +81,30 @@
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;APPLICATION;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <CompileAs>CompileAsC</CompileAs>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(VK_SDK_PATH)\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(ProjectDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>$(VK_SDK_PATH)\bin32\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\atomic_WIN32.cpp" />
+    <ClCompile Include="..\src\atomic_WIN32.c" />
     <ClCompile Include="..\src\FileSystem_WIN32.c" />
     <ClCompile Include="..\src\Game.c" />
     <ClCompile Include="..\src\Graphics_Extension_WIN32.c" />
-    <ClCompile Include="..\src\Graphics_Vulkan.cpp" />
-    <ClCompile Include="..\src\Graphics_WIN32.c" />
+    <ClCompile Include="..\src\Graphics_Vulkan.c" />
     <ClCompile Include="..\src\JobSystem_WIN32.c" />
     <ClCompile Include="..\src\main.c" />
-    <ClCompile Include="..\src\Memory_WIN32.cpp" />
+    <ClCompile Include="..\src\Memory_WIN32.c" />
     <ClCompile Include="..\src\Physics.c" />
-    <ClCompile Include="..\src\ThreadSafety.cpp" />
-    <ClCompile Include="..\src\Time_WIN32.cpp" />
+    <ClCompile Include="..\src\ThreadSafety.c" />
+    <ClCompile Include="..\src\Time_WIN32.c" />
     <ClCompile Include="..\src\Window_WIN32.c" />
   </ItemGroup>
   <ItemGroup>

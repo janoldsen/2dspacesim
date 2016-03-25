@@ -36,13 +36,7 @@
     <ClCompile Include="..\src\Graphics_Extension_WIN32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Graphics_WIN32.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\JobSystem_WIN32.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Memory_WIN32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Window_WIN32.c">
@@ -51,16 +45,19 @@
     <ClCompile Include="..\src\FileSystem_WIN32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ThreadSafety.cpp">
+    <ClCompile Include="..\src\Memory_WIN32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\atomic_WIN32.cpp">
+    <ClCompile Include="..\src\ThreadSafety.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Time_WIN32.cpp">
+    <ClCompile Include="..\src\Graphics_Vulkan.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Graphics_Vulkan.cpp">
+    <ClCompile Include="..\src\atomic_WIN32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Time_WIN32.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

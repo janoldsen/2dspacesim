@@ -89,7 +89,6 @@ static Counter* g_pNextCounter;
 static Counter g_counters[MAX_COUNTERS];
 
 static atomic g_globalWaitCounterListLock;
-static Fiber* g_pWaitCounterListHead;
 static Fiber g_pWaitCounterListTail;
 
 typedef struct WaitingFiber
@@ -99,11 +98,10 @@ typedef struct WaitingFiber
 	struct WaitingFiber* pNextWaitingFiber;
 } WaitingFiber;
 
-static uint64 g_PerformanceFrequency;
-static WaitingFiber g_WaitingFibers[MAX_WAITING_FIBERS];
-static atomic g_WaitingFiberHead;
-static WaitingFiber* g_pWaitListHead;
-static WaitingFiber g_WaitListTail;
+static uint64 g_performanceFrequency;
+static WaitingFiber g_waitingFibers[MAX_WAITING_FIBERS];
+static atomic g_waitingFiberHead;
+static WaitingFiber g_waitListTail;
 
 #ifdef DEBUG_OUTPUT
 static FILE* g_pDebugLog;
@@ -227,14 +225,16 @@ static void pushCounterWaitList(Counter* pCounter)
 
 	for (;;)
 	{
-		Fiber* oldWaitListHead = g_pWaitCounterListHead;
-		//pLastInWaitList->pNextInWaitList = oldWaitList;
-		if (InterlockedCompareExchangePointer(&g_pWaitCounterListHead, pCounter->pWaitListHead, oldWaitListHead) == oldWaitListHead)
+		Fiber* waitCounterListHead = &g_pWaitCounterListTail;
+		while (waitCounterListHead->pNextInWaitList)
 		{
-			oldWaitListHead->pNextInWaitList = pCounter->pWaitListZ.pNextInWaitList;
-			break;
+			waitCounterListHead = waitCounterListHead->pNextInWaitList;
 		}
 
+		if (InterlockedCompareExchangePointer(&waitCounterListHead->pNextInWaitList, pCounter->pWaitListZ.pNextInWaitList, NULL) == NULL)
+		{
+			break;
+		}
 	}
 }
 
@@ -251,13 +251,13 @@ void __stdcall fiberRoutine(void* args)
 		//check timer waitlist
 		for (;;)
 		{
-			WaitingFiber* pWaitingFiber = g_WaitListTail.pNextWaitingFiber;
+			WaitingFiber* pWaitingFiber = g_waitListTail.pNextWaitingFiber;
 
 			uint64 perfCounter;
 			QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter);
 			if (pWaitingFiber != NULL && perfCounter > pWaitingFiber->time)
 			{
-				if (InterlockedCompareExchangePointer(&g_WaitListTail.pNextWaitingFiber, pWaitingFiber->pNextWaitingFiber, pWaitingFiber) == pWaitingFiber)
+				if (InterlockedCompareExchangePointer(&g_waitListTail.pNextWaitingFiber, pWaitingFiber->pNextWaitingFiber, pWaitingFiber) == pWaitingFiber)
 				{
 					switchFiber(pSelf, pWaitingFiber->pFiber);
 				}
@@ -290,7 +290,7 @@ void __stdcall fiberRoutine(void* args)
 			if (InterlockedCompareExchangePointer(&pLastFiber->pNextInWaitList, pFiber->pNextInWaitList, pFiber) == pFiber)
 			{
 				// wake fiber
-				switchFiber(pSelf, pFiber->fiber);
+				switchFiber(pSelf, pFiber);
 			}
 
 		}
@@ -412,14 +412,14 @@ void jsInit()
 
 
 	//init waiting fibers
-	memset(g_WaitingFibers, 0, sizeof(g_WaitingFibers));
-	g_WaitingFiberHead = 0;
-	g_WaitListTail.pFiber = NULL;
-	g_WaitListTail.pNextWaitingFiber = NULL;
-	g_WaitListTail.time = 0;
+	memset(g_waitingFibers, 0, sizeof(g_waitingFibers));
+	g_waitingFiberHead = 0;
+	g_waitListTail.pFiber = NULL;
+	g_waitListTail.pNextWaitingFiber = NULL;
+	g_waitListTail.time = 0;
 
 	//get performance frequency
-	QueryPerformanceFrequency((LARGE_INTEGER*)&g_PerformanceFrequency);
+	QueryPerformanceFrequency((LARGE_INTEGER*)&g_performanceFrequency);
 
 	//init jobs
 	for (int i = 2; i < MAX_JOBS; ++i)
@@ -574,17 +574,17 @@ uint32 jsWait(uint32 ms)
 	WaitingFiber* pWaitingFiber;
 	for (;;)
 	{
-		int oldWaitingFiberHead = g_WaitingFiberHead;
-		int waitingFiberHead = g_WaitingFiberHead;
+		int oldWaitingFiberHead = g_waitingFiberHead;
+		int waitingFiberHead = g_waitingFiberHead;
 
 		do
 		{
 			waitingFiberHead = (waitingFiberHead + 1) % MAX_WAITING_FIBERS;
-		} while (g_WaitingFibers[waitingFiberHead].pFiber != NULL);
+		} while (g_waitingFibers[waitingFiberHead].pFiber != NULL);
 
-		if (InterlockedCompareExchange(&g_WaitingFiberHead, waitingFiberHead, oldWaitingFiberHead) == oldWaitingFiberHead)
+		if (InterlockedCompareExchange(&g_waitingFiberHead, waitingFiberHead, oldWaitingFiberHead) == oldWaitingFiberHead)
 		{
-			pWaitingFiber = g_WaitingFibers + waitingFiberHead;
+			pWaitingFiber = g_waitingFibers + waitingFiberHead;
 			break;
 		}
 	}
@@ -593,13 +593,13 @@ uint32 jsWait(uint32 ms)
 
 	uint64 perfCounter;
 	QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter);
-	pWaitingFiber->time = perfCounter + ms*(g_PerformanceFrequency / 1000);
+	pWaitingFiber->time = perfCounter + ms*(g_performanceFrequency / 1000);
 
 	//sort into waiting list
 	for (;;)
 	{
-		WaitingFiber* pLastFiber = &g_WaitListTail;
-		WaitingFiber* pNextWaitingFiber = g_WaitListTail.pNextWaitingFiber;
+		WaitingFiber* pLastFiber = &g_waitListTail;
+		WaitingFiber* pNextWaitingFiber = g_waitListTail.pNextWaitingFiber;
 
 		while (pNextWaitingFiber != NULL && pNextWaitingFiber->time < pWaitingFiber->time)
 		{
@@ -619,7 +619,7 @@ uint32 jsWait(uint32 ms)
 	runNewFiber();
 	uint64 perfCounter2;
 	QueryPerformanceCounter((LARGE_INTEGER*)&perfCounter2);
-	uint64 elapsedTime = (perfCounter2 - perfCounter) * 1000 / g_PerformanceFrequency;
+	uint64 elapsedTime = (perfCounter2 - perfCounter) * 1000 / g_performanceFrequency;
 	pWaitingFiber->pFiber = NULL;
 	return (uint32)elapsedTime;
 }

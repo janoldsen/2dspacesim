@@ -120,6 +120,7 @@ JOB_ENTRY(initThreadLocal)
 	g_threadLocal[thread].device = device;
 	g_threadLocal[thread].queue = queue;
 	g_threadLocal[thread].commandPool = commandPool;
+
 }
 
 
@@ -422,7 +423,7 @@ void initVulkan(int width, int height, WindowHandle window)
 		vkEndCommandBuffer(commandBuffer);
 	}
 	
-	//jsWaitForCounter(initCounter);
+	jsWaitForCounter(initCounter);
 
 }
 
