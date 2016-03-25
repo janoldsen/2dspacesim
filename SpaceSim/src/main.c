@@ -60,7 +60,7 @@ int main()
 	job.fpFunction = mainJob;
 	job.pParams = 0;
 
-	jsRunJobsInThread(&job, 1, 0, 0);
+	jsRunJobsInThread(&job, 1, 0, MAIN_THREAD);
 	
 	jsStartMainThread();
 
